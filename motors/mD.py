@@ -13,12 +13,12 @@ class MotorD():
             MotorD.pwm.start(0)
     
     def forward(self):
-        io.output(self.in1, False)
-        io.output(self.in2, True)
-
-    def backward(self):
         io.output(self.in1, True)
         io.output(self.in2, False)
+
+    def backward(self):
+        io.output(self.in1, False)
+        io.output(self.in2, True)
 
     def stop(self):
         io.output(self.in1, True)
