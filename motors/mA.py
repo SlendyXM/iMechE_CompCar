@@ -8,8 +8,9 @@ class MotorA():
         io.setup(self.pwm,io.OUT)
         io.setup(self.in1,io.OUT)
         io.setup(self.in2,io.OUT)
-        self.pwm = io.PWM(self.pwm,1000)
-        self.pwm.start(0)
+        if not hasattr(MotorA, 'pwm'):
+            MotorA.pwm = io.PWM(self.pwm_pin, 1000)
+            MotorA.pwm.start(0)
     
     def forward(self):
         io.output(self.in1, False)
