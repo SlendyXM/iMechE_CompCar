@@ -79,11 +79,11 @@ def main():
 		backward_lateral_anticlockwise(10,1)
 		stop(0,1)
 
-		initial_speed = 50
+		'''initial_speed = 50
 		initial_duration = 1
 		while True:
 			exitpowersave()
-			color_detecting()
+			color_detecting()'''
 
 
 

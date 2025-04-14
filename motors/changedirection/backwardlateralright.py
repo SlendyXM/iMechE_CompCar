@@ -2,7 +2,7 @@ import time
 from ..mA import MotorA
 from ..mD import MotorD
 
-def backward_lateral_clockwise(speed,duration):
+def backward_lateral_anticlockwise(speed,duration):
 	MotorA.forward()
 	MotorD.backward()
 	MotorA.pwm.ChangeDutyCycle(speed)
