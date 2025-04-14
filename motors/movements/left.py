@@ -4,14 +4,19 @@ from ..mB import MotorB
 from ..mC import MotorC
 from ..mD import MotorD
 
+motorA = MotorA()
+motorB = MotorB()
+motorC = MotorC()
+motorD = MotorD()
+
 def move_left(speed,duration):
-	MotorA.forward()
-	MotorB.backward()
-	MotorC.forward()
-	MotorD.backward()
-	MotorA.pwm.ChangeDutyCycle(speed)
-	MotorB.pwm.ChangeDutyCycle(speed)
-	MotorC.pwm.ChangeDutyCycle(speed)
-	MotorD.pwm.ChangeDutyCycle(speed)
+	motorA.forward()
+	motorB.backward()
+	motorC.forward()
+	motorD.backward()
+	motorA.pwm.ChangeDutyCycle(speed)
+	motorB.pwm.ChangeDutyCycle(speed)
+	motorC.pwm.ChangeDutyCycle(speed)
+	motorD.pwm.ChangeDutyCycle(speed)
 	print(f"Moving left at {speed}% speed for {duration} seconds")
 	time.sleep(duration)
