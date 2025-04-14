@@ -24,9 +24,9 @@ from motors.changedirection.backwardlateralleft import backward_lateral_clockwis
 from motors.changedirection.backwardlateralright import backward_lateral_anticlockwise
 
 # Importing Plunger
-from plunger.p import Plunger
+from plunger.servo import Servo
 
-p = Plunger()
+servo = Servo()
 
 # Importing Color Sensor
 from colorsensors.csA import Color_SensorA
@@ -78,6 +78,16 @@ def main():
 		backward_lateral_clockwise(10,1)
 		backward_lateral_anticlockwise(10,1)
 		stop(0,1)
+
+		initial_speed = 50
+		initial_duration = 1
+		while True:
+			exitpowersave()
+			color_detecting()
+
+
+
+
 
 
 
