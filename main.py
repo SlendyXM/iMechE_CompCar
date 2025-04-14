@@ -1,6 +1,7 @@
 import RPi.GPIO as io
 import time
 import cv2
+from plunger.rotation_servo import servo_control
 
 # Initializing the GPIO pins
 io.setmode(io.BOARD)
@@ -24,9 +25,7 @@ from motors.changedirection.backwardlateralleft import backward_lateral_clockwis
 from motors.changedirection.backwardlateralright import backward_lateral_anticlockwise
 
 # Importing Plunger
-from plunger.servo import Servo
-
-servo = Servo()
+from plunger.rotation_servo import servo_control
 
 # Importing Color Sensor
 from colorsensors.csA import Color_SensorA
@@ -61,7 +60,7 @@ b = Button()
 # Main Function
 def main():
 	try:
-		move_forward(10,5)
+		'''move_forward(10,5)
 		stop(0,1)
 		move_backward(10,5)
 		stop(0,1)
@@ -77,8 +76,8 @@ def main():
 		forward_lateral_anticlockwise(10,1)
 		backward_lateral_clockwise(10,1)
 		backward_lateral_anticlockwise(10,1)
-		stop(0,1)
-
+		stop(0,1)'''
+		servo_control()
 		'''initial_speed = 50
 		initial_duration = 1
 		while True:
