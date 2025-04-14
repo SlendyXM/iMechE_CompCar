@@ -7,7 +7,7 @@ motorD = MotorD()
 
 def backward_lateral_clockwise(speed,duration):
 	motorA.backward()
-	motorD.backward()
+	motorD.forward()
 	motorA.pwm.ChangeDutyCycle(speed)
 	motorD.pwm.ChangeDutyCycle(speed)
 	print(f"Changing backward direction to left at {speed}% speed for {duration} seconds")
