@@ -8,5 +8,8 @@ class Servo():
         io.setup(self.pwm,io.OUT)
         io.setup(self.vcc,io.OUT)
         io.setup(self.grd,io.OUT)
-        self.pwm = io.PWM(self.pwm,50)
-        self.pwm.start(0)
+        io.output(self.vcc, io.HIGH)
+        io.output(self.grd, io.LOW)
+        if not hasattr(Servo, 'pwm'):
+            Servo.pwm = io.PWM(self.pwm, 50)
+            Servo.pwm.start(0)
