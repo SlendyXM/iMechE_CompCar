@@ -2,10 +2,10 @@ import RPi.GPIO as io
 
 class MotorC():
     def __init__(self,pwm=22,in1=24,in2=26):
-        self.pwm = pwm
+        self.pwm_pin = pwm
         self.in1 = in1
         self.in2 = in2
-        io.setup(self.pwm,io.OUT)
+        io.setup(self.pwm_pin,io.OUT)
         io.setup(self.in1,io.OUT)
         io.setup(self.in2,io.OUT)
         if not hasattr(MotorC, 'pwm'):
