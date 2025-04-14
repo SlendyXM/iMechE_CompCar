@@ -78,7 +78,7 @@ def main():
 		backward_lateral_clockwise(10,1)
 		backward_lateral_anticlockwise(10,1)
 		stop(0,1)
-
+		print("hi")
 
 
 	finally:
