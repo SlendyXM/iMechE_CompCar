@@ -1,7 +1,7 @@
 import RPi.GPIO as io
 import time
 
-class color_sensor_pin():
+class Color_SensorA():
     def __init__(self,s0=31,s1=29,s2=35,s3=33,out=37,oe=32):
         self.s0 = s0
         self.s1 = s1        
@@ -14,11 +14,4 @@ class color_sensor_pin():
         io.setup(self.s2, io.OUT)
         io.setup(self.s3, io.OUT)
         io.setup(self.oe, io.OUT)
-        io.setup(self.out, io.IN)
-
-        # Set the output enable to LOW
-        io.output(self.oe, io.LOW)
-
-        # Set the frequency scaling to 20%
-        io.output(self.s0, io.HIGH)
-        io.output(self.s1, io.LOW)
+        io.setup(self.out, io.IN, pull_up_down=io.PUD_UP)

@@ -29,13 +29,17 @@ from plunger.p import Plunger
 p = Plunger()
 
 # Importing Color Sensor
-from colorsensors.cspin import color_sensor_pin
+from colorsensors.csA import Color_SensorA
 from colorsensors.csB import Color_SensorB
 from colorsensors.csC import Color_SensorC
 
-cspin = color_sensor_pin()
+csA = Color_SensorA()
 csB = Color_SensorB()
 csC = Color_SensorC()
+
+from colorsensors.frequencyscaling import frequency_scaling_0percent, frequency_scaling_2percent, frequency_scaling_20percent, frequency_scaling_100percent
+from colorsensors.powersave import enterpowersave, exitpowersave
+from colorsensors.color_detecting import color_detecting
 
 # Importing LED Lights
 from led.green import LED_Green
@@ -74,6 +78,8 @@ def main():
 		backward_lateral_clockwise(10,1)
 		backward_lateral_anticlockwise(10,1)
 		stop(0,1)
+
+
 
 	finally:
 		io.cleanup([3, 11, 13, 15, 19, 21, 23, 22, 24, 26, 36, 38, 40, 8, 10, 12])
