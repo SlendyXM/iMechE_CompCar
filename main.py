@@ -84,7 +84,6 @@ def main():
 		# Plunger Functions all tested
 		'''servo_control()'''
 		exitpowersave()
-		servo_control()
 		while True:
 			color_detecting()
 	
