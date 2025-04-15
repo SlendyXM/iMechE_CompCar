@@ -41,7 +41,7 @@ def color_detecting():
         green_value = cycle / duration
         #print(f"G:{green_value}")
         
-        print(f"R:{red_value} G:{green_value} B:{blue_value}")
+        print(f"R:{red_value: .2f} G:{green_value: .2f} B:{blue_value: .2f}")
 
         '''if green_value < 7000 and blue_value < 7000 and red_value > 12000:
             print("red")
