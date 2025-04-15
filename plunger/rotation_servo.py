@@ -1,6 +1,6 @@
 import RPi.GPIO as io
 import time
-from servo import Servo
+from plunger.servo import Servo
 
 servo = Servo()
 
