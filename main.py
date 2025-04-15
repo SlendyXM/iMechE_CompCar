@@ -1,7 +1,6 @@
 import RPi.GPIO as io
 import time
 import cv2
-from plunger.rotation_servo import servo_control
 
 # Initializing the GPIO pins
 io.setmode(io.BOARD)
