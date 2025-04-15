@@ -40,8 +40,10 @@ def color_detecting():
         duration = time.time() - start
         green_value = cycle / duration
         #print(f"G:{green_value}")
+        
+        print(f"R:{red_value} G:{green_value} B:{blue_value}")
 
-        if green_value < 7000 and blue_value < 7000 and red_value > 12000:
+        '''if green_value < 7000 and blue_value < 7000 and red_value > 12000:
             print("red")
             temp = 1
         elif red_value < 12000 and blue_value < 12000 and green_value > 12000:
@@ -54,4 +56,4 @@ def color_detecting():
             print("place the object.....")
             temp = 0
         else:
-            print("No matching condition for the current values.")
+            print("No matching condition for the current values.")'''

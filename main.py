@@ -1,6 +1,5 @@
 import RPi.GPIO as io
 import time
-from colorsensors.frequencyscaling import frequency_scaling_100percent
 import cv2
 
 # Initializing the GPIO pins
@@ -28,7 +27,7 @@ from motors.changedirection.backwardlateralright import backward_lateral_anticlo
 from plunger.rotation_servo import servo_control
 
 # Importing Color Sensor
-# from colorsensors.frequencyscaling import frequency_scaling_0percent, frequency_scaling_2percent, frequency_scaling_20percent, frequency_scaling_100percent
+from colorsensors.frequencyscaling import frequency_scaling_0percent, frequency_scaling_2percent, frequency_scaling_20percent, frequency_scaling_100percent
 from colorsensors.powersave import enterpowersave, exitpowersave
 from colorsensors.color_detecting import color_detecting
 '''
