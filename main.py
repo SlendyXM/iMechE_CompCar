@@ -84,7 +84,7 @@ def main():
 		# Plunger Functions all tested
 		'''servo_control()'''
 		exitpowersave()
-		frequency_scaling_100percent()
+		frequency_scaling_2percent()
 		color_detecting()
 	
 	except KeyboardInterrupt:
