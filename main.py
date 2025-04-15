@@ -1,5 +1,6 @@
 import RPi.GPIO as io
 import time
+from colorsensors import color_detecting
 import cv2
 
 # Initializing the GPIO pins
@@ -79,16 +80,22 @@ def main():
 		stop(0,1)'''
 		# Plunger Functions all tested
 		'''servo_control()'''
+		while True:
+			color_detecting()
 	finally:
-		'''
-		STBY PIN	-->	3
-		MOTOR A PIN --> 11, 13, 15
-		MOTOR B PIN --> 19, 21, 23
-		MOTOR C PIN --> 22, 24, 26
-		MOTOR D PIN --> 36, 38, 40
-		PLUNGER PIN --> 8
-		'''
-		io.cleanup([3, 11, 13, 15, 19, 21, 23, 22, 24, 26, 36, 38, 40, 8, 10, 12])
+		# Group pins logically
+		stby_pin = [3]
+		motor_a_pins = [11, 13, 15]
+		motor_b_pins = [19, 21, 23]
+		motor_c_pins = [22, 24, 26]
+		motor_d_pins = [36, 38, 40]
+		plunger_pin = [8]
+
+		# Combine all pins into a single list
+		all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + plunger_pin
+
+		# Cleanup
+		io.cleanup(all_pins)
 
 if __name__ == "__main__":
 	main()

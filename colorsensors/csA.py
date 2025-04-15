@@ -1,5 +1,4 @@
 import RPi.GPIO as io
-import time
 
 class Color_SensorA():
     def __init__(self,s0=31,s1=29,s2=35,s3=33,out=37,oe=32):
