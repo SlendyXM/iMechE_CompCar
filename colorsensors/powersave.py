@@ -1,14 +1,18 @@
 import RPi.GPIO as io
-from csA import Color_SensorA
-from csB import Color_SensorB
-from csC import Color_SensorC
+from colorsensors.csA import Color_SensorA
+#from colorsensors.csB import Color_SensorB
+#from colorsensors.csC import Color_SensorC
+
+colorsensorA = Color_SensorA()
+#colorsensorB = Color_SensorB()
+#colorsensorC = Color_SensorC()
 
 def enterpowersave():
-    io.setup(Color_SensorA.oe, io.HIGH)
-    io.setup(Color_SensorB.oe, io.HIGH)
-    io.setup(Color_SensorC.oe, io.HIGH)
+    io.setup(colorsensorA.oe, io.HIGH)
+    #io.setup(colorsensorB.oe, io.HIGH)
+    #io.setup(colorsensorC.oe, io.HIGH)
 
 def exitpowersave():
-    io.setup(Color_SensorA.oe, io.LOW)
-    io.setup(Color_SensorB.oe, io.LOW)
-    io.setup(Color_SensorC.oe, io.LOW)
+    io.setup(colorsensorA.oe, io.LOW)
+    #io.setup(colorsensorB.oe, io.LOW)
+    #io.setup(colorsensorC.oe, io.LOW)

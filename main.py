@@ -24,23 +24,13 @@ from motors.changedirection.backwardlateralleft import backward_lateral_clockwis
 from motors.changedirection.backwardlateralright import backward_lateral_anticlockwise
 
 # Importing Plunger
-from plunger.p import Plunger
-
-p = Plunger()
+from plunger.rotation_servo import servo_control
 
 # Importing Color Sensor
-from colorsensors.csA import Color_SensorA
-from colorsensors.csB import Color_SensorB
-from colorsensors.csC import Color_SensorC
-
-csA = Color_SensorA()
-csB = Color_SensorB()
-csC = Color_SensorC()
-
 from colorsensors.frequencyscaling import frequency_scaling_0percent, frequency_scaling_2percent, frequency_scaling_20percent, frequency_scaling_100percent
 from colorsensors.powersave import enterpowersave, exitpowersave
 from colorsensors.color_detecting import color_detecting
-
+'''
 # Importing LED Lights
 from led.green import LED_Green
 from led.red import LED_Red
@@ -56,33 +46,56 @@ ls = Laser_Sensor()
 # Importing the button
 from button.b import Button
 
-b = Button()
+b = Button()'''
+
+# Localize all pins
+stby_pin = [3]
+motor_a_pins = [11, 13, 15]
+motor_b_pins = [19, 21, 23]
+motor_c_pins = [22, 24, 26]
+motor_d_pins = [36, 38, 40]
+plunger_pin = [8]
+color_sensor_a_pins = [29, 31, 32, 33, 35, 37]
+
+# Combine all pins into a single list
+all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + plunger_pin + color_sensor_a_pins
 
 # Main Function
 def main():
 	try:
-		move_forward(50,5)
+		# Motor Functions all tested
+		'''move_forward(10,5)
 		stop(0,1)
-		move_backward(50,5)
+		move_backward(10,5)
 		stop(0,1)
-		move_left(50,5)
+		move_left(10,5)
 		stop(0,1)
-		move_right(50,5)
+		move_right(10,5)
 		stop(0,1)
-		rotate_clockwise(10,2)
+		rotate_clockwise(10,5)
 		stop(0,1)
-		rotate_anticlockwise(10,2)
+		rotate_anticlockwise(10,5)
 		stop(0,1)
 		forward_lateral_clockwise(10,1)
 		forward_lateral_anticlockwise(10,1)
 		backward_lateral_clockwise(10,1)
 		backward_lateral_anticlockwise(10,1)
-		stop(0,1)
-		print("hi")
-
+		stop(0,1)'''
+		# Plunger Functions all tested
+		'''servo_control()'''
+		exitpowersave()
+		frequency_scaling_100percent()
+		color_detecting()
+	
+	except KeyboardInterrupt:
+        # Handle ^C (Ctrl+C) gracefully
+		print("KeyboardInterrupt detected. Entering power save mode...") 
+		enterpowersave()
+		io.cleanup(all_pins)
 
 	finally:
-		io.cleanup([3, 11, 13, 15, 19, 21, 23, 22, 24, 26, 36, 38, 40, 8, 10, 12])
+		# Cleanup
+		io.cleanup(all_pins)
 
 if __name__ == "__main__":
 	main()

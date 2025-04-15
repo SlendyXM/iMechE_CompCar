@@ -1,7 +1,7 @@
 import RPi.GPIO as io
 
-class Color_SensorA():
-    def __init__(self,s0=31,s1=29,s2=35,s3=33,out=37,oe=32):
+class Color_SensorB():
+    def __init__(self,s0=30,s1=31,s2=32,s3=33,out=34,oe=35):
         self.s0 = s0
         self.s1 = s1        
         self.s2 = s2        

@@ -4,14 +4,19 @@ from ..mB import MotorB
 from ..mC import MotorC
 from ..mD import MotorD
 
+motorA = MotorA()
+motorB = MotorB()
+motorC = MotorC()
+motorD = MotorD()
+
 def rotate_clockwise(speed,duration):
-	MotorA.backward()
-	MotorB.backward()
-	MotorC.forward()
-	MotorD.forward()
-	MotorA.pwm.ChangeDutyCycle(speed)
-	MotorB.pwm.ChangeDutyCycle(speed)
-	MotorC.pwm.ChangeDutyCycle(speed)
-	MotorD.pwm.ChangeDutyCycle(speed)
+	motorA.backward()
+	motorB.backward()
+	motorC.forward()
+	motorD.forward()
+	motorA.pwm.ChangeDutyCycle(speed)
+	motorB.pwm.ChangeDutyCycle(speed)
+	motorC.pwm.ChangeDutyCycle(speed)
+	motorD.pwm.ChangeDutyCycle(speed)
 	print(f"Rotating clockwise at {speed}% speed for {duration} seconds")
 	time.sleep(duration)
