@@ -1,5 +1,6 @@
 import RPi.GPIO as io
 import time
+from colorsensors.frequencyscaling import frequency_scaling_100percent
 import cv2
 
 # Initializing the GPIO pins
@@ -84,6 +85,7 @@ def main():
 		# Plunger Functions all tested
 		'''servo_control()'''
 		exitpowersave()
+		frequency_scaling_100percent()
 		color_detecting()
 	
 	except KeyboardInterrupt:
