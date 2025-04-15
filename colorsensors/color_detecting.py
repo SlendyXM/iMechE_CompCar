@@ -1,13 +1,13 @@
 import RPi.GPIO as io
 import time
 from colorsensors.csA import Color_SensorA
-from colorsensors.csB import Color_SensorB
-from colorsensors.csC import Color_SensorC
+#from colorsensors.csB import Color_SensorB
+#from colorsensors.csC import Color_SensorC
 from colorsensors.colorfilter import red, blue, green
 
 colorsensorA = Color_SensorA()
-colorsensorB = Color_SensorB()
-colorsensorC = Color_SensorC()
+#colorsensorB = Color_SensorB()
+#colorsensorC = Color_SensorC()
 
 cycle = 10
 
