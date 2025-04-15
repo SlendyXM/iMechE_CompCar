@@ -90,9 +90,10 @@ def main():
 		motor_c_pins = [22, 24, 26]
 		motor_d_pins = [36, 38, 40]
 		plunger_pin = [8]
+		color_sensor_a_pins = [29, 31, 32, 33, 35, 37]
 
 		# Combine all pins into a single list
-		all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + plunger_pin
+		all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + plunger_pin + color_sensor_a_pins
 
 		# Cleanup
 		io.cleanup(all_pins)

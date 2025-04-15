@@ -1,7 +1,7 @@
 import RPi.GPIO as io
-from csA import Color_SensorA
-from csB import Color_SensorB
-from csC import Color_SensorC
+from colorsensors.csA import Color_SensorA
+from colorsensors.csB import Color_SensorB
+from colorsensors.csC import Color_SensorC
 
 def enterpowersave():
     io.setup(Color_SensorA.oe, io.HIGH)
