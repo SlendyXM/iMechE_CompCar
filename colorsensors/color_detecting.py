@@ -42,14 +42,16 @@ def color_detecting():
         #print(f"G:{green_value}")
 
         if green_value < 7000 and blue_value < 7000 and red_value > 12000:
-          print("red")
-          temp = 1
+            print("red")
+            temp = 1
         elif red_value < 12000 and blue_value < 12000 and green_value > 12000:
-          print("green")
-          temp = 1
+            print("green")
+            temp = 1
         elif green_value <7000 and red_value < 7000 and blue_value > 12000:
-          print("blue")
-          temp = 1
+            print("blue")
+            temp = 1
         elif red_value > 10000 and green_value > 10000 and blue_value > 10000 and temp==1:
-          print("place the object.....")
-          temp = 0
+            print("place the object.....")
+            temp = 0
+        else:
+            print("No matching condition for the current values.")
