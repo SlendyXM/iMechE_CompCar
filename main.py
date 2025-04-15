@@ -80,6 +80,14 @@ def main():
 		# Plunger Functions all tested
 		'''servo_control()'''
 	finally:
+		'''
+		STBY PIN	-->	3
+		MOTOR A PIN --> 11, 13, 15
+		MOTOR B PIN --> 19, 21, 23
+		MOTOR C PIN --> 22, 24, 26
+		MOTOR D PIN --> 36, 38, 40
+		PLUNGER PIN --> 8
+		'''
 		io.cleanup([3, 11, 13, 15, 19, 21, 23, 22, 24, 26, 36, 38, 40, 8, 10, 12])
 
 if __name__ == "__main__":
