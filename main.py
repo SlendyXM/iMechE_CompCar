@@ -59,6 +59,7 @@ b = Button()'''
 # Main Function
 def main():
 	try:
+		# Motor Functions all tested
 		'''move_forward(10,5)
 		stop(0,1)
 		move_backward(10,5)
@@ -76,19 +77,8 @@ def main():
 		backward_lateral_clockwise(10,1)
 		backward_lateral_anticlockwise(10,1)
 		stop(0,1)'''
-		servo_control()
-		'''initial_speed = 50
-		initial_duration = 1
-		while True:
-			exitpowersave()
-			color_detecting()'''
-
-
-
-
-
-
-
+		# Plunger Functions all tested
+		'''servo_control()'''
 	finally:
 		io.cleanup([3, 11, 13, 15, 19, 21, 23, 22, 24, 26, 36, 38, 40, 8, 10, 12])
 
