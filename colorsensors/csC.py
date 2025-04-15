@@ -1,7 +1,7 @@
 import RPi.GPIO as io
 
 class Color_SensorC():
-    def __init__(self,s0=100,s1=101,s2=102,s3=103,out=104,oe=105):
+    def __init__(self,s0=40,s1=41,s2=42,s3=43,out=44,oe=45):
         self.s0 = s0
         self.s1 = s1        
         self.s2 = s2        
