@@ -14,7 +14,8 @@ cycle = 10
 def color_detecting():
     temp = 1
     while True:
-        red()
+        io.output(colorsensorA.s2, io.LOW)
+        io.output(colorsensorA.s3, io.LOW)
         time.sleep(0.3)
         start = time.time()
         for impulse_count in range(cycle):
