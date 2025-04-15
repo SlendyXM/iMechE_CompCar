@@ -12,4 +12,4 @@ class Servo():
         io.output(self.grd, io.LOW)
         if not hasattr(Servo, 'pwm'):
             Servo.pwm = io.PWM(self.pwm_pin, 50)
-            Servo.pwm.start(0)
+            Servo.pwm.start(7)
