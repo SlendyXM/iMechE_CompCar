@@ -15,7 +15,7 @@ def color_detecting():
     temp = 1
     while True:
         red()
-        time.sleep(0.1)
+        time.sleep(0.3)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
@@ -24,7 +24,7 @@ def color_detecting():
         #print(f"R:{red_value}")
 
         blue()
-        time.sleep(0.1)
+        time.sleep(0.3)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
@@ -33,7 +33,7 @@ def color_detecting():
         #print(f"B:{blue_value}")
 
         green()
-        time.sleep(0.1)
+        time.sleep(0.3)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
