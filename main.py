@@ -26,7 +26,7 @@ from motors.changedirection.backwardlateralright import backward_lateral_anticlo
 # Importing Plunger
 from plunger.rotation_servo import servo_control
 
-# Importing Color Sensor
+'''# Importing Color Sensor
 from colorsensors.csA import Color_SensorA
 from colorsensors.csB import Color_SensorB
 from colorsensors.csC import Color_SensorC
@@ -54,7 +54,7 @@ ls = Laser_Sensor()
 # Importing the button
 from button.b import Button
 
-b = Button()
+b = Button()'''
 
 # Main Function
 def main():
