@@ -84,8 +84,7 @@ def main():
 		# Plunger Functions all tested
 		'''servo_control()'''
 		exitpowersave()
-		while True:
-			color_detecting()
+		color_detecting()
 	
 	except KeyboardInterrupt:
         # Handle ^C (Ctrl+C) gracefully
