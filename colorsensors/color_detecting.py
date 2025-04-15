@@ -13,7 +13,7 @@ cycle = 10
 
 def color_detecting():
     temp = 1
-    while (1):
+    while True:
         red()
         time.sleep(0.1)
         start = time.time()
@@ -52,4 +52,4 @@ def color_detecting():
           temp = 1
         elif red_value > 10000 and green_value > 10000 and blue_value > 10000 and temp==1:
           print("place the object.....")
-          temp=0
+          temp = 0
