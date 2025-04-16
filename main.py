@@ -85,7 +85,15 @@ def main():
 		'''servo_control()'''
 		exitpowersave()
 		frequency_scaling_2percent()
-		color_detecting()
+		# Continuously call color_detecting() until it returns True
+		while True:
+			result = color_detecting()
+			if result:  # Break the loop if color_detecting() returns True
+				print("Color detecting condition met. Exiting loop.")
+				break
+			else:
+				print("Color detecting condition not met. Continuing...")
+
 	
 	except KeyboardInterrupt:
         # Handle ^C (Ctrl+C) gracefully
