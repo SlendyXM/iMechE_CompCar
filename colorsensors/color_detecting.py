@@ -15,7 +15,7 @@ def color_detecting():
     temp = 1
     while (1):
         red()
-        time.sleep(0.1)
+        time.sleep(0.05)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
@@ -23,7 +23,7 @@ def color_detecting():
         red_value = cycle / duration
 
         blue()
-        time.sleep(0.1)
+        time.sleep(0.05)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
@@ -31,7 +31,7 @@ def color_detecting():
         blue_value = cycle / duration
 
         green()
-        time.sleep(0.1)
+        time.sleep(0.05)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
@@ -43,30 +43,30 @@ def color_detecting():
         if red_value >= 300 and green_value >= 300 and blue_value >= 300:
             temp += 1
             print("white")
-            if temp > 10:
+            if temp > 4:
                 print("white")
                 temp = 1
         elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
             temp += 1
             print("black")
-            if temp > 10:
+            if temp > 4:
                 print("black")
                 temp = 1
         elif red_value < blue_value and green_value < blue_value and blue_value >= 300:
             temp += 1
             print("blue")
-            if temp > 10:
+            if temp > 4:
                 print("blue")
                 temp = 1
         elif red_value >= 300 and green_value < red_value and blue_value < red_value:
             temp += 1
             print("red")
-            if temp > 10:
+            if temp > 4:
                 print("red")
                 temp = 1
         else:
             temp += 1
             print("wood")
-            if temp > 10:
+            if temp > 4:
                 print("wood")
                 temp = 1
