@@ -15,42 +15,46 @@ def color_detecting():
     temp = 1
     while (1):
         red()
-        time.sleep(0.3)
+        time.sleep(0.05)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
         duration = time.time() - start
         red_value = cycle / duration
-        #print(f"R:{red_value}")
 
         blue()
-        time.sleep(0.3)
+        time.sleep(0.05)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
         duration = time.time() - start
         blue_value = cycle / duration
-        #print(f"B:{blue_value}")
 
         green()
-        time.sleep(0.3)
+        time.sleep(0.05)
         start = time.time()
         for impulse_count in range(cycle):
             io.wait_for_edge(colorsensorA.out, io.FALLING)
         duration = time.time() - start
         green_value = cycle / duration
-        #print(f"G:{green_value}")
         
         print(f"R:{red_value: .2f} G:{green_value: .2f} B:{blue_value: .2f}")
 
-        if green_value < 500 and blue_value < 500 and red_value > 600:
+        if red_value >= 300 and green_value < red_value and blue_value < red_value:
             print("red")
             temp = 1
-        elif red_value < 200 and blue_value < 200 and green_value > 200:
+        elif red_value < blue_value and green_value < blue_value and blue_value >= 300:
+            print("blue")
+            temp = 1
+        elif red_value < blue_value and red_value < green_value and green_value >= 300 and blue_value >= 300:
+            print("yellow")
+            temp = 1
+        elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
             print("black")
             temp = 1
-        elif green_value > 300 and red_value < 300 and blue_value > 200:
-            print("blue")
+        elif red_value >= 300 and green_value >= 300 and blue_value >= 300:
+            print("white")
             temp = 1
         else:
             print("No matching condition for the current values.")
+            temp = 0

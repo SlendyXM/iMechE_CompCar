@@ -15,7 +15,7 @@ def red():
     #io.output(colorsensorC.s2, io.LOW)
     #io.output(colorsensorC.s3, io.LOW)
 
-def blue():
+def green():
     io.output(colorsensorA.s2, io.HIGH)
     io.output(colorsensorA.s3, io.HIGH)
     #io.output(colorsensorB.s2, io.HIGH)
@@ -23,7 +23,7 @@ def blue():
     #io.output(colorsensorC.s2, io.HIGH)
     #io.output(colorsensorC.s3, io.HIGH)
 
-def green():
+def blue():
     io.output(colorsensorA.s2, io.LOW)
     io.output(colorsensorA.s3, io.HIGH)
     #io.output(colorsensorB.s2, io.LOW)
