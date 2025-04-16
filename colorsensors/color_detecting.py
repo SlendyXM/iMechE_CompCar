@@ -43,11 +43,11 @@ def color_detecting():
         
         print(f"R:{red_value: .2f} G:{green_value: .2f} B:{blue_value: .2f}")
 
-        if green_value < 500 and blue_value < 500 and red_value > 800:
+        if green_value < 500 and blue_value < 500 and red_value > 600:
             print("red")
             temp = 1
-        elif red_value < 12000 and blue_value < 12000 and green_value > 12000:
-            print("green")
+        elif red_value < 200 and blue_value < 200 and green_value > 200:
+            print("black")
             temp = 1
         elif green_value > 300 and red_value < 300 and blue_value > 200:
             print("blue")
