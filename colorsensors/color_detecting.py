@@ -45,12 +45,16 @@ def detect_color(sensor, sensor_name):
         return "white"
     elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
         print(f"{sensor_name} - black")
+        return "black"
     elif red_value < blue_value and green_value < blue_value and blue_value >= 300:
         print(f"{sensor_name} - blue")
+        return "blue"
     elif red_value >= 300 and green_value < red_value and blue_value < red_value:
         print(f"{sensor_name} - red")
+        return "red"
     else:
         print(f"{sensor_name} - wood")
+        return "wood"
 
 def color_detecting():
     while True:
