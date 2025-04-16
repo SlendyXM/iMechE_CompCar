@@ -64,9 +64,9 @@ all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins 
 def main():
 	try:
 		# Motor Functions all tested
-		'''move_forward(10,5)
+		move_forward(10,5)
 		stop(0,1)
-		move_backward(10,5)
+		'''move_backward(10,5)
 		stop(0,1)
 		move_left(10,5)
 		stop(0,1)
@@ -82,7 +82,7 @@ def main():
 		backward_lateral_anticlockwise(10,1)
 		stop(0,1)'''
 		# Plunger Functions all tested
-		'''servo_control()'''
+		servo_control()
 		exitpowersave()
 		frequency_scaling_2percent()
 		color_detecting()
