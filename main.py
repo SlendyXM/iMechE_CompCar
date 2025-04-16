@@ -83,24 +83,18 @@ def main():
 		stop(0,1)'''
 		# Plunger Functions all tested
 		'''servo_control()'''
-		exitpowersave()
+		# Color Sensors all tested
+		'''exitpowersave()
 		frequency_scaling_2percent()
-		# Continuously call color_detecting() until it returns True
 		while True:
 			result = color_detecting()
-			if result:  # Break the loop if color_detecting() returns True
+			if result:
 				print("Color detecting condition met. Exiting loop.")
+				enterpowersave()
 				break
 			else:
-				print("Color detecting condition not met. Continuing...")
-
-	
-	except KeyboardInterrupt:
-        # Handle ^C (Ctrl+C) gracefully
-		print("KeyboardInterrupt detected. Entering power save mode...") 
-		enterpowersave()
-		io.cleanup(all_pins)
-
+				print("Color detecting condition not met. Continuing...")'''
+		
 	finally:
 		# Cleanup
 		io.cleanup(all_pins)
