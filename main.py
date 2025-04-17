@@ -1,6 +1,4 @@
 import RPi.GPIO as io
-import time
-import cv2
 
 # Initializing the GPIO pins
 io.setmode(io.BOARD)
@@ -30,23 +28,25 @@ from plunger.rotation_servo import servo_control
 from colorsensors.frequencyscaling import frequency_scaling_0percent, frequency_scaling_2percent, frequency_scaling_20percent, frequency_scaling_100percent
 from colorsensors.powersave import enterpowersave, exitpowersave
 from colorsensors.color_detecting import color_detecting
-'''
+
 # Importing LED Lights
 from led.green import LED_Green
 from led.red import LED_Red
 
-g = LED_Green()
-r = LED_Red()
-
 # Importing Laser Sensor
-from lasersensors.ls import Laser_Sensor
-
-ls = Laser_Sensor()
+from lasersensors.lsl import Laser_Sensor_left
+from lasersensors.lsr import Laser_Sensor_right
 
 # Importing the button
-from button.b import Button
+from buttons.redbutton import single_target
+from buttons.bluebutton import multiple_target
+from buttons.blackbutton import cease_all_functions
 
-b = Button()'''
+# Importing the buzzer
+from buzzer.buzzer import sound
+
+'''# Importing the camera
+from camera.visual_recognition import detect_wall'''
 
 # Localize all pins
 stby_pin = [3]
@@ -59,9 +59,26 @@ color_sensor_a_pins = [29, 31, 32, 33, 35, 37]
 color_sensor_b_pins = []
 color_sensor_c_pins = []
 color_sensor_d_pins = []
+laser_sensor_left_pin = []
+laser_sensor_right_pin = []
+red_button_pin = []
+blue_button_pin = []
+black_button_pin = []
+red_LED_pin = []
+green_LED_pin = []
+buzzer_pin = []
 
 # Combine all pins into a single list
-all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + plunger_pin + color_sensor_a_pins + color_sensor_b_pins + color_sensor_c_pins + color_sensor_d_pins
+all_pins = (
+	stby_pin + 
+	motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + 
+	plunger_pin + 
+	color_sensor_a_pins + color_sensor_b_pins + color_sensor_c_pins + color_sensor_d_pins + 
+	laser_sensor_left_pin + laser_sensor_right_pin + 
+	red_button_pin + blue_button_pin + black_button_pin + 
+	red_LED_pin + green_LED_pin + 
+	buzzer_pin
+)
 
 # Main Function
 def main():
@@ -97,11 +114,78 @@ def main():
 				break
 			else:
 				print("Color detecting condition not met. Continuing...")'''
-		
+		# Actual Main Loop
+		'''while True:
+			# Green, Red LED and buzzer is off until button is pressed
+			LED_Red(False)
+			sound(False)
+
+			# Check if the button is pressed
+
+			# If black button is pushed, all functions will cease
+			if cease_all_functions() == True:
+				io.cleanup(all_pins)
+				print("Ceasing all functions.")
+				break	# Break main loop and terminate the program
+
+			# If red button is pushed, single target mode will be activated
+			if single_target() == True:
+
+				# Turn on the green LED
+				LED_Green(True)
+				while LED_Green(True) == True:
+
+					# Move forward at 30% speed until wall is detected
+					move_forward(30, 0.5)
+
+					# Detect wall
+					if detect_wall() == True:
+
+						# Turn on red LED and sound the buzzer
+						LED_Red(True)
+						sound(True)
+
+						# Stop the car 
+						stop(0,15)
+
+						# Turn off red LED and turn off the buzzer
+						LED_Red(False)
+						sound(False)
+
+					# Check if original target is reached
+					reach_original_target = False
+					while not reach_original_target:
+
+						# Turning on the TCS3200 color sensors
+						exitpowersave()
+
+						# Set the frequency scaling to 2%
+						frequency_scaling_2percent()
+
+						# Move backward at 30% speed until reach back to the original position
+						move_backward(30, 0.5)
+
+						# Color detection method for the original target
+						result = color_detecting()
+						if result:
+							print("Detected the original target. Exiting loop.")
+
+							# Turn off the TCS3200 color sensors
+							enterpowersave()
+
+							# Stop the car
+							stop(0, 1)
+
+							# Break loop
+							reach_original_target = True
+
+						else:
+							print("Not yet detected the original target. Continuing...")'''
 	finally:
 		# Cleanup
+		LED_Green(False)
 		io.cleanup(all_pins)
-
+			
 if __name__ == "__main__":
 	main()
 
