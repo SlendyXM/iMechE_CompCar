@@ -7,7 +7,6 @@ io.setup(3,io.OUT)		# STBY
 io.output(3,io.HIGH)	# enable board
 
 # Importing Motor Movements and Rotations
-from camera import MiddleCalibration
 from motors.movements.stop import stop
 
 from motors.movements.forward import move_forward
