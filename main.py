@@ -1,4 +1,5 @@
 import RPi.GPIO as io
+import time
 
 # Initializing the GPIO pins
 io.setmode(io.BOARD)
@@ -6,6 +7,7 @@ io.setup(3,io.OUT)		# STBY
 io.output(3,io.HIGH)	# enable board
 
 # Importing Motor Movements and Rotations
+from camera import MiddleCalibration
 from motors.movements.stop import stop
 
 from motors.movements.forward import move_forward
@@ -45,8 +47,8 @@ from buttons.blackbutton import cease_all_functions
 # Importing the buzzer
 from buzzer.buzzer import sound
 
-'''# Importing the camera
-from camera.visual_recognition import detect_wall'''
+# Importing the camera
+from camera.MiddleCalibration import middle_calibration
 
 # Localize all pins
 stby_pin						= [3]
@@ -115,7 +117,7 @@ def main():
 			else:
 				print("Color detecting condition not met. Continuing...")'''
 		# Actual Main Loop
-		'''while True:
+		while True:
 			# Green, Red LED and buzzer is off until button is pressed
 			LED_Red(False)
 			sound(False)
@@ -136,10 +138,25 @@ def main():
 				while LED_Green(True) == True:
 
 					# Move forward at 30% speed until wall is detected
-					move_forward(30, 0.5)
+					move_forward(30)
+
+					yellow_position, cam_distance = middle_calibration()
+
+					# Detect yellow object
+					while yellow_position:
+						print(f"Yellow Position: {yellow_position}, Distance: {cam_distance:.2f} cm")
+						if yellow_position == "Left":
+							print("Adjusting to the left...")
+							rotate_anticlockwise(10)
+						elif yellow_position == "Right":
+							print("Adjusting to the right...")
+							rotate_clockwise(10)
+						elif yellow_position == "Centered":
+							print("Yellow object centered. Proceeding...")
+							break
 
 					# Detect wall
-					if detect_wall() == True:
+					if cam_distance <= 5:
 
 						# Turn on red LED and sound the buzzer
 						LED_Red(True)
@@ -163,7 +180,7 @@ def main():
 						frequency_scaling_2percent()
 
 						# Move backward at 30% speed until reach back to the original position
-						move_backward(30, 0.5)
+						move_backward(30)
 
 						# Color detection method for the original target
 						result = color_detecting()
@@ -180,7 +197,7 @@ def main():
 							reach_original_target = True
 
 						else:
-							print("Not yet detected the original target. Continuing...")'''
+							print("Not yet detected the original target. Continuing...")
 	finally:
 		# Cleanup
 		LED_Green(False)

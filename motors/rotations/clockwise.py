@@ -1,4 +1,3 @@
-import time
 from ..mA import MotorA
 from ..mB import MotorB
 from ..mC import MotorC
@@ -9,7 +8,7 @@ motorB = MotorB()
 motorC = MotorC()
 motorD = MotorD()
 
-def rotate_clockwise(speed,duration):
+def rotate_clockwise(speed):
 	motorA.backward()
 	motorB.backward()
 	motorC.forward()
@@ -18,5 +17,4 @@ def rotate_clockwise(speed,duration):
 	motorB.pwm.ChangeDutyCycle(speed)
 	motorC.pwm.ChangeDutyCycle(speed)
 	motorD.pwm.ChangeDutyCycle(speed)
-	print(f"Rotating clockwise at {speed}% speed for {duration} seconds")
-	time.sleep(duration)
+	print(f"Rotating clockwise at {speed}% speed")

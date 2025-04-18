@@ -1,4 +1,3 @@
-import time
 from ..mA import MotorA
 from ..mB import MotorB
 from ..mC import MotorC
@@ -9,7 +8,7 @@ motorB = MotorB()
 motorC = MotorC()
 motorD = MotorD()
 
-def move_forward(speed,duration):
+def move_forward(speed):
 	motorA.forward()
 	motorB.forward()
 	motorC.forward()
@@ -18,5 +17,4 @@ def move_forward(speed,duration):
 	motorB.pwm.ChangeDutyCycle(speed)
 	motorC.pwm.ChangeDutyCycle(speed)
 	motorD.pwm.ChangeDutyCycle(speed)
-	print(f"Moving forward at {speed}% speed for {duration} seconds")
-	time.sleep(duration)
+	print(f"Moving forward at {speed}% speed")
