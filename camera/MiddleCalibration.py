@@ -14,7 +14,7 @@ tolerance = 20
 ch_state = 0  # 0: middle, 1: go left, 2: go right
 
 # ---------------------- Camera Setup ----------------------
-video_capture = cv2.VideoCapture(0)  # Use 0 for the default camera
+video_capture = cv2.VideoCapture(0, cv2.CAP_V4L2)  # Use 0 for the default camera
 if not video_capture.isOpened():
     print("Error: Could not open camera")
     exit()
