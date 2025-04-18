@@ -30,8 +30,8 @@ from colorsensors.powersave import enterpowersave, exitpowersave
 from colorsensors.color_detecting import color_detecting
 
 # Importing LED Lights
-from led.green import LED_Green
-from led.red import LED_Red
+from leds.green import LED_Green
+from leds.red import LED_Red
 
 # Importing Laser Sensor
 from lasersensors.lsl import Laser_Sensor_left
