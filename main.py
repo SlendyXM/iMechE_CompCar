@@ -137,47 +137,47 @@ def main():
 				LED_Green(True)
 				while LED_Green(True) == True:
 
-					# Move forward at 30% speed until wall is detected
+					
 					move_forward(30)
 
 					yellow_position, cam_distance = middle_calibration()
 
 					# Detect yellow object
 					while yellow_position:
+						# Detect wall
+						if cam_distance <= 5:
+							break
+						# Move forward at 30% speed until wall is detected
+						move_forward(30)
+
 						print(f"Yellow Position: {yellow_position}, Distance: {cam_distance:.2f} cm")
 						if yellow_position == "Left":
 							print("Adjusting to the left...")
-							rotate_anticlockwise(10)
+							forward_lateral_anticlockwise(10)
 						elif yellow_position == "Right":
 							print("Adjusting to the right...")
-							rotate_clockwise(10)
+							forward_lateral_clockwise(10)
 						elif yellow_position == "Centered":
 							print("Yellow object centered. Proceeding...")
-							break
+						time.sleep(0.2)
 
-					# Detect wall
-					if cam_distance <= 5:
+					# Turn on red LED and sound the buzzer
+					LED_Red(True)
+					sound(True)
 
-						# Turn on red LED and sound the buzzer
-						LED_Red(True)
-						sound(True)
+					# Stop the car 
+					stop(0,15)
 
-						# Stop the car 
-						stop(0,15)
-
-						# Turn off red LED and turn off the buzzer
-						LED_Red(False)
-						sound(False)
+					# Turn off red LED and turn off the buzzer
+					LED_Red(False)
+					sound(False)
 
 					# Check if original target is reached
 					reach_original_target = False
+					exitpowersave()
+					frequency_scaling_2percent()
+
 					while not reach_original_target:
-
-						# Turning on the TCS3200 color sensors
-						exitpowersave()
-
-						# Set the frequency scaling to 2%
-						frequency_scaling_2percent()
 
 						# Move backward at 30% speed until reach back to the original position
 						move_backward(30)
@@ -195,9 +195,7 @@ def main():
 
 							# Break loop
 							reach_original_target = True
-
-						else:
-							print("Not yet detected the original target. Continuing...")
+						print("Not yet detected the original target. Continuing...")
 	finally:
 		# Cleanup
 		LED_Green(False)
