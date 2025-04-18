@@ -63,12 +63,12 @@ color_sensor_c_pins				= []
 color_sensor_d_pins				= []
 laser_sensor_left_pin			= []
 laser_sensor_right_pin			= []
-red_button_pin					= []
+red_button_pin					= [44]
 blue_button_pin					= []
-black_button_pin				= []
-red_LED_pin						= []
-green_LED_pin					= []
-buzzer_pin						= []
+black_button_pin				= [45]
+red_LED_pin						= [41]
+green_LED_pin					= [42]
+buzzer_pin						= [43]
 
 # Combine all pins into a single list
 all_pins = (
