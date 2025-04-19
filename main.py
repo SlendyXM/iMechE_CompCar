@@ -5,6 +5,7 @@ import time
 io.setmode(io.BOARD)
 io.setup(3,io.OUT)		# STBY
 io.output(3,io.HIGH)	# enable board
+from gpio_board_extension.extension_gpio_board import execute_device_command
 
 # Importing Motor Movements and Rotations
 from motors.movements.stop import stop
