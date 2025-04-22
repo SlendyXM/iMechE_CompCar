@@ -46,12 +46,24 @@ def read_sensor1_data(ser, sensor_state):
     """Read and process data from sensor 1 (ACM0)."""
     try:
         # Read one line at a time
-        raw_data = ser.readline()  # Read as bytes
-        if raw_data:
-            print(f"Sensor ACM0 Raw data: {raw_data}")  # Debug: Print raw bytes
+        raw_data_1 = ser.readline()  # First line
+        raw_data_2 = ser.readline()  # Second line
+
+        if raw_data_1 and raw_data_2:
+            print(f"Sensor ACM0 Raw data (line 1): {raw_data_1}")  # Debug: Print first raw line
+            print(f"Sensor ACM0 Raw data (line 2): {raw_data_2}")  # Debug: Print second raw line
+
             try:
-                line = raw_data.decode('utf-8', errors='replace')
-                print(f"Sensor ACM0 Decoded: {line}")  # Debug: Print decoded string
+                # Decode both lines
+                line_1 = raw_data_1.decode('utf-8', errors='replace')
+                line_2 = raw_data_2.decode('utf-8', errors='replace')
+                print(f"Sensor ACM0 Decoded (line 1): {line_1}")  # Debug: Print first decoded line
+                print(f"Sensor ACM0 Decoded (line 2): {line_2}")  # Debug: Print second decoded line
+
+                # Combine the two lines for parsing
+                combined_line = f"{line_1.strip()} {line_2.strip()}"
+                print(f"Sensor ACM0 Combined: {combined_line}")  # Debug: Print combined line
+
                 distance, is_valid = parse_sensor_data(line, sensor_state)
                 return distance, is_valid
             except UnicodeDecodeError as e:
