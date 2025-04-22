@@ -123,8 +123,8 @@ def main():
 		while True:
 			# Green, Red LED and buzzer is off until button is pressed
 			execute(command_index=2, input_array=[LED_Green, 0])
-			'''LED_Red(False)
-			sound(False)'''
+			# execute(command_index=2, input_array=[LED_Red, 0])	LED_Red(False)
+			# execute(command_index=2, input_array=[sound, 0])		sound(False)
 
 			# Check if the button is pressed
 
@@ -166,15 +166,15 @@ def main():
 						time.sleep(0.2)
 
 					# Turn on red LED and sound the buzzer
-					'''LED_Red(True)
-					sound(True)'''
+					# execute_command(command_index = 2, input_array = [LED_Red, 1])	LED_Red(True)
+					# execute_command(command_index = 2, input_array = [sound, 1])		sound(True)
 
 					# Stop the car 
 					stop(0,15)
 
 					# Turn off red LED and turn off the buzzer
-					# LED_Red(False)
-					# sound(False)
+					# execute_command(command_index = 2, input_array = [LED_Red, 0])	LED_Red(False)
+					# execute_command(command_index = 2, input_array = [sound, 0])		sound(False)
 
 					# Check if original target is reached
 					reach_original_target = False
