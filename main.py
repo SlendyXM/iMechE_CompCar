@@ -5,6 +5,10 @@ import time
 io.setmode(io.BOARD)
 io.setup(3,io.OUT)		# STBY
 io.output(3,io.HIGH)	# enable board
+import gpio_board_extension.extension_gpio_board
+
+execute = gpio_board_extension.extension_gpio_board.execute_device_command
+
 
 # Importing Motor Movements and Rotations
 from motors.movements.stop import stop
@@ -118,10 +122,11 @@ def main():
 		# Actual Main Loop
 		while True:
 			# Green, Red LED and buzzer is off until button is pressed
-			LED_Red(False)
-			sound(False)
+			execute(command_index=2, input_array=[LED_Green, 0])
+			# execute(command_index=2, input_array=[LED_Red, 0])	LED_Red(False)
+			# execute(command_index=2, input_array=[sound, 0])		sound(False)
 
-			# Check if the button is pressed
+			'''Check if the button is pressed'''
 
 			# If black button is pushed, all functions will cease
 			if cease_all_functions() == True:
@@ -133,8 +138,8 @@ def main():
 			if single_target() == True:
 
 				# Turn on the green LED
-				LED_Green(True)
-				while LED_Green(True) == True:
+				execute(command_index=2, input_array=[LED_Green, 1])
+				while execute(command_index=2, input_array=[LED_Green, 1]) == True:
 
 					
 					move_forward(30)
@@ -161,15 +166,15 @@ def main():
 						time.sleep(0.2)
 
 					# Turn on red LED and sound the buzzer
-					LED_Red(True)
-					sound(True)
+					# execute_command(command_index = 2, input_array = [LED_Red, 1])	LED_Red(True)
+					# execute_command(command_index = 2, input_array = [sound, 1])		sound(True)
 
 					# Stop the car 
 					stop(0,15)
 
 					# Turn off red LED and turn off the buzzer
-					LED_Red(False)
-					sound(False)
+					# execute_command(command_index = 2, input_array = [LED_Red, 0])	LED_Red(False)
+					# execute_command(command_index = 2, input_array = [sound, 0])		sound(False)
 
 					# Check if original target is reached
 					reach_original_target = False
@@ -197,7 +202,7 @@ def main():
 						print("Not yet detected the original target. Continuing...")
 	finally:
 		# Cleanup
-		LED_Green(False)
+		execute(command_index=2, input_array=[LED_Green, 0])
 		io.cleanup(all_pins)
 			
 if __name__ == "__main__":

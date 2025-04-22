@@ -504,7 +504,7 @@ def main():
     except KeyboardInterrupt:
         print("\nProgram interrupted by user")
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     main()
 
 # # Example usage:
