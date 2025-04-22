@@ -13,7 +13,7 @@ def middle_calibration():
     tolerance = 20
 
     # ---------------------- Camera Setup ----------------------
-    video_capture = cv2.VideoCapture(0, cv2.CAP_V4L2)  # Use 0 for the default camera
+    video_capture = cv2.VideoCapture(1, cv2.CAP_V4L2)  # Use 0 for the default camera
     if not video_capture.isOpened():
         print("Error: Could not open camera")
         exit()
@@ -79,12 +79,15 @@ def middle_calibration():
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
             # ---------------------- Step 3: Display Results ----------------------
-            cv2.imshow("Camera Feed", frame)
-            cv2.imshow("Yellow Mask ROI", mask)
+            #cv2.imshow("Camera Feed", frame)
+            #cv2.imshow("Yellow Mask ROI", mask)
+            
             if cv2.waitKey(1) & 0xFF == 27:
                 break
-        return yellow_position, distance_to_yellow
+            return yellow_position, distance_to_yellow, frame, mask
+        
 
     finally:
-        video_capture.release()
-        cv2.destroyAllWindows()
+        print("abc")
+        #video_capture.release()
+        #cv2.destroyAllWindows()
