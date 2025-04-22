@@ -126,7 +126,7 @@ def main():
 			# execute(command_index=2, input_array=[LED_Red, 0])	LED_Red(False)
 			# execute(command_index=2, input_array=[sound, 0])		sound(False)
 
-			# Check if the button is pressed
+			'''Check if the button is pressed'''
 
 			# If black button is pushed, all functions will cease
 			if cease_all_functions() == True:
