@@ -64,7 +64,7 @@ def read_sensor1_data(ser, sensor_state):
                 combined_line = f"{line_1.strip()} {line_2.strip()}"
                 print(f"Sensor ACM0 Combined: {combined_line}")  # Debug: Print combined line
 
-                distance, is_valid = parse_sensor_data(line, sensor_state)
+                distance, is_valid = parse_sensor_data(combined_line, sensor_state)
                 return distance, is_valid
             except UnicodeDecodeError as e:
                 print(f"Sensor ACM0 Decode error: {e}")
