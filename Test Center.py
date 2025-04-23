@@ -130,7 +130,6 @@ def main():
 
 	            # Move backward at 30% speed until reach back to the original position
                 move_backward(30)
-                time.sleep(2)
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
