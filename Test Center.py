@@ -135,7 +135,8 @@ def main():
 
 	                # Break loop
                     reach_original_target = True
-                print("Not yet detected the original target. Continuing...")
+                else:
+                    print("Not yet detected the original target. Continuing...")
     finally:
         # Cleanup
         io.cleanup(all_pins)
