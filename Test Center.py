@@ -99,9 +99,11 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
+                    #forward_lateral_clockwise(3)
                     move_right(3)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
+                    #forward_lateral_anticlockwise(3)
                     move_left(3)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
@@ -116,7 +118,9 @@ def main():
             reach_original_target = False
             exitpowersave()
             frequency_scaling_2percent()
-
+            # Move backward at 30% speed until reach back to the original position
+            move_backward(10)
+            time.sleep(2)
             while not reach_original_target:
 
                 # Detect wall
@@ -128,9 +132,7 @@ def main():
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
 
-	            # Move backward at 30% speed until reach back to the original position
-                move_backward(30)
-                time.sleep(2)
+                move_backward(10)
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
