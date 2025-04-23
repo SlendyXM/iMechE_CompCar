@@ -44,7 +44,7 @@ from lasersensors.lsr import Laser_Sensor_right
 
 # Importing the button
 from buttons.redbutton import single_target
-from buttons.bluebutton import multiple_target
+# from buttons.bluebutton import multiple_target
 from buttons.blackbutton import cease_all_functions
 
 # Importing the buzzer

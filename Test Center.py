@@ -25,6 +25,11 @@ from motors.changedirection.forwardlateralright import forward_lateral_clockwise
 from motors.changedirection.backwardlateralleft import backward_lateral_clockwise
 from motors.changedirection.backwardlateralright import backward_lateral_anticlockwise
 
+# Importing Color Sensor
+from colorsensors.frequencyscaling import frequency_scaling_2percent
+from colorsensors.powersave import enterpowersave, exitpowersave
+from colorsensors.color_detecting import color_detecting
+
 # Importing the camera
 from camera.MiddleCalibrationPiCam import middle_calibration
 
@@ -52,7 +57,7 @@ def main():
 
     try:
         #while True:
-            #move_forward(30)
+            move_forward(10)
             vt_position=""
             while not vt_position:
                 frame = picam2.capture_array()
@@ -104,7 +109,32 @@ def main():
                 if cv2.waitKey(1) & 0xFF == 27:
                     stop(0,1)
                     break
-					
+			
+                
+            
+            reach_original_target = False
+            exitpowersave()
+            frequency_scaling_2percent()
+
+            while not reach_original_target:
+
+	            # Move backward at 30% speed until reach back to the original position
+                move_backward(30)
+
+	            # Color detection method for the original target
+                result = color_detecting()
+                if result:
+                    print("Detected the original target. Exiting loop.")
+
+	                # Turn off the TCS3200 color sensors
+                    enterpowersave()
+
+	                # Stop the car
+                    stop(0, 1)
+
+	                # Break loop
+                    reach_original_target = True
+                print("Not yet detected the original target. Continuing...")
     finally:
         # Cleanup
         io.cleanup(all_pins)
