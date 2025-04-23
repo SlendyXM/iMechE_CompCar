@@ -14,47 +14,65 @@ colorsensorA = Color_SensorA()
 cycle = 10
 
 def detect_color(sensor, sensor_name):
-    red()
-    time.sleep(0.05)
-    start = time.time()
-    for impulse_count in range(cycle):
-        io.wait_for_edge(sensor.out, io.FALLING)
-    duration = time.time() - start
-    red_value = cycle / duration
+    """Detect the color using the specified sensor with polling."""
+    try:
+        # Activate red filter and measure frequency
+        red()
+        time.sleep(0.05)
+        start = time.time()
+        red_value = measure_frequency(sensor.out, "red", sensor_name)
 
-    blue()
-    time.sleep(0.05)
-    start = time.time()
-    for impulse_count in range(cycle):
-        io.wait_for_edge(sensor.out, io.FALLING)
-    duration = time.time() - start
-    blue_value = cycle / duration
+        # Activate blue filter and measure frequency
+        blue()
+        time.sleep(0.05)
+        blue_value = measure_frequency(sensor.out, "blue", sensor_name)
 
-    green()
-    time.sleep(0.05)
-    start = time.time()
-    for impulse_count in range(cycle):
-        io.wait_for_edge(sensor.out, io.FALLING)
-    duration = time.time() - start
-    green_value = cycle / duration
+        # Activate green filter and measure frequency
+        green()
+        time.sleep(0.05)
+        green_value = measure_frequency(sensor.out, "green", sensor_name)
 
-    print(f"{sensor_name} - R:{red_value:.2f} G:{green_value:.2f} B:{blue_value:.2f}")
+        # Print the detected values
+        print(f"{sensor_name} - R:{red_value:.2f} G:{green_value:.2f} B:{blue_value:.2f}")
 
-    if red_value >= 300 and green_value >= 300 and blue_value >= 300:
-        print(f"{sensor_name} - white")
-        return "white"
-    elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
-        print(f"{sensor_name} - black")
-        return "black"
-    elif red_value < blue_value and green_value < blue_value and blue_value >= 300:
-        print(f"{sensor_name} - blue")
-        return "blue"
-    elif red_value >= 300 and green_value < red_value and blue_value < red_value:
-        print(f"{sensor_name} - red")
-        return "red"
-    else:
-        print(f"{sensor_name} - wood")
-        return "wood"
+        # Determine the color based on the measured values
+        if red_value >= 300 and green_value >= 300 and blue_value >= 300:
+            print(f"{sensor_name} - white")
+            return "white"
+        elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
+            print(f"{sensor_name} - black")
+            return "black"
+        elif red_value < blue_value and green_value < blue_value and blue_value >= 300:
+            print(f"{sensor_name} - blue")
+            return "blue"
+        elif red_value >= 300 and green_value < red_value and blue_value < red_value:
+            print(f"{sensor_name} - red")
+            return "red"
+        else:
+            print(f"{sensor_name} - wood")
+            return "wood"
+    except RuntimeError as e:
+        print(f"Error detecting color for {sensor_name}: {e}")
+        return None
+
+
+def measure_frequency(pin, color, sensor_name):
+    """Measure the frequency of falling edges on the specified GPIO pin."""
+    impulse_count = 0
+    timeout = 1  # Timeout in seconds
+    start_time = time.time()
+    previous_state = io.input(pin)
+
+    while time.time() - start_time < timeout:
+        current_state = io.input(pin)
+        if previous_state == io.HIGH and current_state == io.LOW:
+            impulse_count += 1
+        previous_state = current_state
+
+    if impulse_count == 0:
+        print(f"{sensor_name} - No impulses detected for {color} filter.")
+    return impulse_count / timeout  # Frequency in Hz
+
 
 def color_detecting():
     while True:
