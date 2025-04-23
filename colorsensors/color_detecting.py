@@ -56,10 +56,9 @@ def detect_color(sensor, sensor_name):
         return None
 
 
-def measure_frequency(pin, color, sensor_name):
+def measure_frequency(pin, color, sensor_name, timeout = 0.03): # Timeout = 0.03s
     """Measure the frequency of falling edges on the specified GPIO pin."""
     impulse_count = 0
-    timeout = 1  # Timeout in seconds
     start_time = time.time()
     previous_state = io.input(pin)
 
@@ -68,6 +67,7 @@ def measure_frequency(pin, color, sensor_name):
         if previous_state == io.HIGH and current_state == io.LOW:
             impulse_count += 1
         previous_state = current_state
+        time.sleep(0.0001)  # Small delay to avoid busy-waiting
 
     if impulse_count == 0:
         print(f"{sensor_name} - No impulses detected for {color} filter.")
