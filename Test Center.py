@@ -30,10 +30,11 @@ from colorsensors.frequencyscaling import frequency_scaling_2percent
 from colorsensors.powersave import enterpowersave, exitpowersave
 from colorsensors.color_detecting import color_detecting
 
+# Importing Buzzer
+from buzzer.buzzer import sound
+
 # Importing the camera
 from camera.MiddleCalibrationPiCam import middle_calibration
-
-from motors.movements.stop import stop
 
 # Localize all pins
 stby_pin                        = [3]
@@ -42,9 +43,16 @@ motor_b_pins                    = [19, 21, 23]
 motor_c_pins                    = [22, 24, 26]
 motor_d_pins                    = [36, 38, 40]
 color_sensor_a_pins				= [29, 31, 32, 33, 35, 37]
+color_sensor_b_pins             = []
+color_sensor_c_pins             = []
+color_sensor_d_pins             = []
+buzzer_pins                     = [12, 16]
 
 # Combine all pins into a single list
-all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + color_sensor_a_pins
+all_pins = (stby_pin + 
+            motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + 
+            color_sensor_a_pins + color_sensor_b_pins + color_sensor_c_pins + color_sensor_d_pins + 
+            buzzer_pins)
 
 # Main Function
 def main():
@@ -55,6 +63,7 @@ def main():
     #if not video_capture.isOpened():
         #print("Error: Could not open camera")
         #return
+    sound(False)
 
     try:
         #while True:
@@ -91,6 +100,7 @@ def main():
                 
                 #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
+                    sound(True)
                     stop(0, 1)
                     break
                 # Move forward at 30% speed until wall is detected
@@ -114,7 +124,7 @@ def main():
                     break
 			
                 
-            
+            sound(False)
             reach_original_target = False
             exitpowersave()
             frequency_scaling_2percent()
@@ -132,12 +142,8 @@ def main():
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
 
-<<<<<<< HEAD
-                move_backward(10)
-=======
 	            # Move backward at 30% speed until reach back to the original position
                 move_backward(30)
->>>>>>> 05c4280175885e6a75e4cdd84f40adc3bde340a7
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
