@@ -99,10 +99,10 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    move_right(10)
+                    move_right(3)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    move_left(10)
+                    move_left(3)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                 #time.sleep(0.2)
@@ -121,6 +121,21 @@ def main():
 
 	            # Move backward at 30% speed until reach back to the original position
                 move_backward(30)
+
+                print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
+                if vt_position == "Left":
+                    print("Adjusting to the left...")
+                    move_right(3)
+                elif vt_position == "Right":
+                    print("Adjusting to the right...")
+                    move_left(3)
+                elif vt_position == "Centered":
+                    print("Yellow object centered. Proceeding...")
+                #time.sleep(0.2)
+                i+=1
+                if cv2.waitKey(1) & 0xFF == 27:
+                    stop(0,1)
+                    break
 
 	            # Color detection method for the original target
                 result = color_detecting()
