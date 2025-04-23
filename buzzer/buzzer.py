@@ -1,8 +1,8 @@
 import serial
 import time
 from typing import List, Tuple, Optional
-
-<<<<<<< HEAD
+import RPi.GPIO as io
+'''<<<<<<< HEAD
 class PiDeviceController:
     def __init__(self, serial_port='/dev/ttyACM0', baudrate=115200, timeout=1):
         """
@@ -165,19 +165,33 @@ def main():
         controller.disconnect()
 
 if __name__ == "__main__":
-    main()
-=======
+    main()'''
+#=======
+
+
+# Set the GPIO mode
 io.setmode(io.BOARD)
+
+# Setup the GPIO pins
 io.setup(3, io.OUT)  # STBY
 io.setup(12, io.OUT)
 io.setup(16, io.OUT)
-io.output(3, io.HIGH)  # enable board
 
+# Enable the board
+io.output(3, io.HIGH)
 
-while True:
-    io.output(12, io.HIGH)
-    io.output(16, io.LOW)
-    io.output(12, io.LOW)
-    io.output(16, io.HIGH)
+try:
+    while True:
+        io.output(12, io.HIGH)
+        io.output(16, io.LOW)
+        time.sleep(0.0005)  # Add a delay to see the change
+        io.output(12, io.LOW)
+        io.output(16, io.HIGH)
+        time.sleep(0.0005)  # Add a delay to see the change
+except KeyboardInterrupt:
+    pass
+finally:
+    # Cleanup the GPIO settings
+    io.cleanup([3, 12, 16])
+
     
->>>>>>> 05c4280175885e6a75e4cdd84f40adc3bde340a7
