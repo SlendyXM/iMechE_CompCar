@@ -119,6 +119,15 @@ def main():
 
             while not reach_original_target:
 
+                # Detect wall
+                frame = picam2.capture_array()
+                vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
+                print([i,vt_position, cam_distance])
+                #cv2.imshow("Camera Feed", frame)
+                if processed_frame is not None and mask is not None:
+                    cv2.imshow("Camera Feed", processed_frame)
+                    cv2.imshow("Mask", mask)
+
 	            # Move backward at 30% speed until reach back to the original position
                 move_backward(30)
                 time.sleep(2)
