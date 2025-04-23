@@ -132,7 +132,12 @@ def main():
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
 
+<<<<<<< HEAD
                 move_backward(10)
+=======
+	            # Move backward at 30% speed until reach back to the original position
+                move_backward(30)
+>>>>>>> 05c4280175885e6a75e4cdd84f40adc3bde340a7
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
