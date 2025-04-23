@@ -36,14 +36,15 @@ from camera.MiddleCalibrationPiCam import middle_calibration
 from motors.movements.stop import stop
 
 # Localize all pins
-stby_pin = [3]
-motor_a_pins = [11, 13, 15]
-motor_b_pins = [19, 21, 23]
-motor_c_pins = [22, 24, 26]
-motor_d_pins = [36, 38, 40]
+stby_pin                        = [3]
+motor_a_pins                    = [11, 13, 15]
+motor_b_pins                    = [19, 21, 23]
+motor_c_pins                    = [22, 24, 26]
+motor_d_pins                    = [36, 38, 40]
+color_sensor_a_pins				= [29, 31, 32, 33, 35, 37]
 
 # Combine all pins into a single list
-all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins
+all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + color_sensor_a_pins
 
 # Main Function
 def main():
