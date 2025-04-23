@@ -1,7 +1,6 @@
 import serial
 import time
 import struct
-import RPi.GPIO as GPIO
 from typing import List, Tuple, Optional
 
 class PiDeviceController:
