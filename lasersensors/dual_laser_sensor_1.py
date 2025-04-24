@@ -67,10 +67,13 @@ def compare_distances(distance1, distance2, offset):
     difference = distance1 - distance2 - offset
 
     if difference > 5:
+        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
         return "Anticlockwise"
     elif difference < -5:
+        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
         return "Clockwise"
     else:
+        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
         return "Parallel"
 
 
