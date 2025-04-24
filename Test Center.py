@@ -55,6 +55,21 @@ all_pins = (stby_pin +
             color_sensor_a_pins + color_sensor_b_pins + color_sensor_c_pins + color_sensor_d_pins + 
             buzzer_pins)
 
+
+from lasersensors.dual_laser_sensor import setup_serial, process_laser_data
+
+# Initialize sensors
+sensor1 = setup_serial('/dev/ttyACM0')
+sensor2 = setup_serial('/dev/ttyACM1')
+offset = -43  # Constant error
+
+# Initialize sensor states
+sensor1_state = {'is_valid': False, 'id': 'ACM0'}
+sensor2_state = {'is_valid': False, 'id': 'ACM1'}
+
+
+
+
 # Main Function
 def main():
     picam2 = Picamera2()
@@ -92,7 +107,14 @@ def main():
                 # Detect wall
                 frame = picam2.capture_array()
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
+                Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
+
+
+                if not sensor1 or not sensor2:
+                    print("Failed to initialize sensors")
+                    continue
                 print([i,vt_position, cam_distance])
+                print(f"Rotate Action: {Rotate_command}")
                 #cv2.imshow("Camera Feed", frame)
                 if processed_frame is not None and mask is not None:
                     cv2.imshow("Camera Feed", processed_frame)
@@ -119,6 +141,7 @@ def main():
                     move_left(3)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
+                if Rotate_command
                 #time.sleep(0.2)
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:
@@ -179,6 +202,8 @@ def main():
     finally:
         # Cleanup
         io.cleanup(all_pins)
+        sensor1.close()
+        sensor2.close()
 
 if __name__ == "__main__":
     main()
