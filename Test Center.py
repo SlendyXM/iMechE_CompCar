@@ -102,8 +102,7 @@ def main():
                 #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
                     stop(0,1)
-                    buzzer.sound(True)
-                    
+                    buzzer.sound(True)                    
                     break
                 # Move forward at 30% speed until wall is detected
                 move_forward(30)
