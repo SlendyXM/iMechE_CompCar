@@ -51,7 +51,7 @@ def lasercali():
     while True:
         result=read_laser()
         if result=="Anticlockwise":
-stop
+            stop(0, 0.01)
             confirm_coe=0
             rotate_anticlockwise(10)
             time.sleep(0.01)
