@@ -56,7 +56,7 @@ all_pins = (stby_pin +
             buzzer_pins)
 
 
-from lasersensors.dual_laser_sensor import setup_serial, process_laser_data
+from lasersensors.dual_laser_sensor_1 import setup_serial, process_laser_data
 
 # Initialize sensors
 sensor1 = setup_serial('/dev/ttyACM0')
@@ -112,7 +112,7 @@ def main():
 
                 if not sensor1 or not sensor2:
                     print("Failed to initialize sensors")
-                    continue
+                    #continue
                 print([i,vt_position, cam_distance])
                 print(f"Rotate Action: {Rotate_command}")
                 #cv2.imshow("Camera Feed", frame)
@@ -133,14 +133,23 @@ def main():
                 if vt_position == "Left":
                     print("Adjusting to the left...")
                     #forward_lateral_clockwise(3)
-                    move_right(3)
+                    move_right(10)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
                     #forward_lateral_anticlockwise(3)
-                    move_left(3)
+                    move_left(10)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
-                #if Rotate_command
+                    
+                '''if Rotate_command == "Parallel":
+                    print("Parallel")
+                    move_forward(10)
+                elif Rotate_command == "Anticlockwise":
+                    forward_lateral_anticlockwise(10)
+                    sleep (0.01)
+                elif Rotate_command == "Clockwise":
+                    forward_lateral_clockwise(10)
+                    sleep(0.01)'''
                 #time.sleep(0.2)
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:

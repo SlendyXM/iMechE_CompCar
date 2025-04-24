@@ -64,12 +64,13 @@ def compare_distances(distance1, distance2, offset):
     if distance1 is None or distance2 is None:
         return "No rotation: Missing distance data"
 
-    difference = distance1 - distance2 - offset
+    difference = (distance1 - distance2)/distance1
 
-    if difference > 5:
+    if difference > 0.2:
         print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
         return "Anticlockwise"
-    elif difference < -5:
+        
+    elif difference < -0.2:
         print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
         return "Clockwise"
     else:
