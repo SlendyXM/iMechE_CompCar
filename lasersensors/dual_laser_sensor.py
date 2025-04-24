@@ -127,7 +127,7 @@ def read_laser():
     # Initialize both sensors
     sensor1 = setup_serial('/dev/ttyACM0')
     sensor2 = setup_serial('/dev/ttyACM1')
-    offset=0     #constant error
+    offset=40    #constant error
     # Check if both sensors are initialized
     if not sensor1 or not sensor2:
         print("Failed to initialize one or both serial connections")
