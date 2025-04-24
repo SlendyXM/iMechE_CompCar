@@ -107,14 +107,14 @@ def main():
                 # Detect wall
                 frame = picam2.capture_array()
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
+                #Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
 
 
-                if not sensor1 or not sensor2:
-                    print("Failed to initialize sensors")
+                #if not sensor1 or not sensor2:
+                    #print("Failed to initialize sensors")
                     #continue
                 print([i,vt_position, cam_distance])
-                print(f"Rotate Action: {Rotate_command}")
+                #print(f"Rotate Action: {Rotate_command}")
                 #cv2.imshow("Camera Feed", frame)
                 if processed_frame is not None and mask is not None:
                     cv2.imshow("Camera Feed", processed_frame)
@@ -124,7 +124,8 @@ def main():
                 #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
                     stop(0,1)
-                    buzzer.sound(True)                    
+                    buzzer.sound(True)  
+                    time.sleep(1)                  
                     break
                 # Move forward at 30% speed until wall is detected
                 move_forward(30)
@@ -138,7 +139,7 @@ def main():
                     print("Adjusting to the right...")
                     #forward_lateral_anticlockwise(3)
                     move_left(10)
-                elif vt_position == "Centered":
+                else:
                     print("Yellow object centered. Proceeding...")
                     
                 '''if Rotate_command == "Parallel":
@@ -150,7 +151,7 @@ def main():
                 elif Rotate_command == "Clockwise":
                     forward_lateral_clockwise(10)
                     sleep(0.01)'''
-                #time.sleep(0.2)
+                time.sleep(0.01)
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:
                     stop(0,1)
