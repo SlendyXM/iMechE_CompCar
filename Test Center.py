@@ -31,7 +31,8 @@ from colorsensors.powersave import enterpowersave, exitpowersave
 from colorsensors.color_detecting import color_detecting
 
 # Importing Buzzer
-from buzzer.buzzer import sound
+from buzzer.buzzer import buzzer
+buzzer = buzzer()
 
 # Importing the camera
 from camera.MiddleCalibrationPiCam import middle_calibration
@@ -63,7 +64,7 @@ def main():
     #if not video_capture.isOpened():
         #print("Error: Could not open camera")
         #return
-    sound(False)
+    buzzer.sound(False)
 
     try:
         #while True:
@@ -100,7 +101,7 @@ def main():
                 
                 #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
-                    sound(True)
+                    buzzer.sound(True)
                     stop(0, 1)
                     break
                 # Move forward at 30% speed until wall is detected
@@ -124,7 +125,7 @@ def main():
                     break
 			
                 
-            sound(False)
+            buzzer.sound(False)
             reach_original_target = False
             exitpowersave()
             frequency_scaling_2percent()
