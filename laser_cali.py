@@ -53,13 +53,11 @@ def lasercali():
         print(f'result:{result}')
         print(f"{confirm_coe}")
         if result=="Anticlockwise":
-            stop(0, 0.01)
             confirm_coe=0
             rotate_anticlockwise(10)
             time.sleep(0.1)
             stop(0,0.01)
         elif result=="Clockwise":
-            stop(0, 0.01)
             confirm_coe=0
             rotate_clockwise(10)
             time.sleep(0.1)

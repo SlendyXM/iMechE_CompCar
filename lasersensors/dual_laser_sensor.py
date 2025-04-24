@@ -94,7 +94,7 @@ def read_sensor2_data(ser, sensor_state):
 
                 # Combine the two lines for parsing
                 combined_line = f"{line_1.strip()} {line_2.strip()}"
-                print(f"Sensor ACM0 Combined: {combined_line}")  # Debug: Print combined line
+                print(f"Sensor ACM1 Combined: {combined_line}")  # Debug: Print combined line
 
                 distance, is_valid = parse_sensor_data(combined_line, sensor_state)
                 return distance, is_valid
@@ -113,8 +113,11 @@ def compare_distances(distance1, distance2,offset):
     if distance1 is None or distance2 is None:
         return "No rotation: Missing distance data"
     
-    difference = distance1 - distance2-offset
+    difference = distance1 - distance2 #+ offset
     print(f"Distance difference (ACM0 - ACM1): {difference} mm")
+    print(f"Offset ratio with distance 1 : {difference/distance1}")
+    print(f"Offset ratio with distance 2 :{difference/distance2}")
+    print(f"Offset ratio with average distance : {2*difference/(distance1+distance2)}")
     
     if difference > 5:
         return "Anticlockwise"
@@ -127,7 +130,11 @@ def read_laser():
     # Initialize both sensors
     sensor1 = setup_serial('/dev/ttyACM0')
     sensor2 = setup_serial('/dev/ttyACM1')
+<<<<<<< HEAD
     offset=40    #constant error
+=======
+    offset=40     #constant error
+>>>>>>> 4a3282cf9d8d389a11b70963d0863d94fa59b035
     # Check if both sensors are initialized
     if not sensor1 or not sensor2:
         print("Failed to initialize one or both serial connections")
@@ -141,7 +148,7 @@ def read_laser():
     sensor1_state = {'is_valid': False, 'id': 'ACM0'}
     sensor2_state = {'is_valid': False, 'id': 'ACM1'}
     
-    time.sleep(1.5)  # Wait for sensors to stabilize
+    time.sleep(0.1)  # Wait for sensors to stabilize
     
     try:
         while True:
