@@ -1,6 +1,4 @@
-import serial
 import time
-from typing import List, Tuple, Optional
 import RPi.GPIO as io
 '''<<<<<<< HEAD
 class PiDeviceController:
@@ -167,31 +165,41 @@ def main():
 if __name__ == "__main__":
     main()'''
 #=======
+class buzzer():
+    def __init__(self, positive_pin = 12, negative_pin = 16):
+        self.positive_pin = positive_pin
+        self.negative_pin = negative_pin
+        io.setup(positive_pin, io.OUT)
+        io.setup(negative_pin, io.OUT)
+
+    def sound(self, power):
+        while power:
+            io.output(self.positive_pin, io.HIGH)
+            io.output(self.negative_pin, io.LOW)
+            time.sleep(0.0005)
+            io.output(self.positive_pin, io.LOW)
+            io.output(self.negative_pin, io.HIGH)
+            time.sleep(0.0005)
 
 
-# Set the GPIO mode
-io.setmode(io.BOARD)
+def debug():
+    try:
+        io.setmode(io.BOARD)
+        io.setup(3, io.OUT)  # STBY
+        io.output(3, io.HIGH)  # enable board
+        buzzer_instance = buzzer(positive_pin=12, negative_pin=16)
+        while True:
+            io.output(12, io.HIGH)
+            io.output(16, io.LOW)
+            time.sleep(0.0005)  # Add a delay to see the change
+            io.output(12, io.LOW)
+            io.output(16, io.HIGH)
+            time.sleep(0.0005)  # Add a delay to see the change
+    except KeyboardInterrupt:
+        pass
+    finally:
+        # Cleanup the GPIO settings
+        io.cleanup([3, 12, 16])
 
-# Setup the GPIO pins
-io.setup(3, io.OUT)  # STBY
-io.setup(12, io.OUT)
-io.setup(16, io.OUT)
-
-# Enable the board
-io.output(3, io.HIGH)
-
-try:
-    while True:
-        io.output(12, io.HIGH)
-        io.output(16, io.LOW)
-        time.sleep(0.0005)  # Add a delay to see the change
-        io.output(12, io.LOW)
-        io.output(16, io.HIGH)
-        time.sleep(0.0005)  # Add a delay to see the change
-except KeyboardInterrupt:
-    pass
-finally:
-    # Cleanup the GPIO settings
-    io.cleanup([3, 12, 16])
-
-    
+if __name__ == "__main__":
+    debug() 
