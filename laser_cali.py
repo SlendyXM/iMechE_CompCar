@@ -50,25 +50,31 @@ def lasercali():
     confirm_coe=0
     while True:
         result=read_laser()
+        print(f'result:{result}')
+        print(f"{confirm_coe}")
         if result=="Anticlockwise":
             stop(0, 0.01)
             confirm_coe=0
             rotate_anticlockwise(10)
-            time.sleep(0.01)
+            time.sleep(0.1)
             stop(0,0.01)
         elif result=="Clockwise":
+            stop(0, 0.01)
             confirm_coe=0
             rotate_clockwise(10)
-            time.sleep(0.01)
+            time.sleep(0.1)
             stop(0,0.01)
         elif result=="Parallel":
             stop(0,0.01)
-            cofirm_coe+=1
-            if confirm_coe==10:
+            confirm_coe+=1
+            print(f"{confirm_coe}")
+            if confirm_coe>=10:
                 break
+    else:
+        print("Happy")
 
 if __name__ == "__main__":
     try:
         lasercali()
-    except:
+    finally:
         io.cleanup(all_pins)

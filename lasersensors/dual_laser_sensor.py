@@ -116,9 +116,9 @@ def compare_distances(distance1, distance2,offset):
     difference = distance1 - distance2-offset
     print(f"Distance difference (ACM0 - ACM1): {difference} mm")
     
-    if difference > 25:
+    if difference > 5:
         return "Anticlockwise"
-    elif difference < -25:
+    elif difference < -5:
         return "Clockwise"
     else:
         return "Parallel"
@@ -127,7 +127,7 @@ def read_laser():
     # Initialize both sensors
     sensor1 = setup_serial('/dev/ttyACM0')
     sensor2 = setup_serial('/dev/ttyACM1')
-    offset=43       #constant error
+    offset=-43       #constant error
     # Check if both sensors are initialized
     if not sensor1 or not sensor2:
         print("Failed to initialize one or both serial connections")
@@ -141,7 +141,7 @@ def read_laser():
     sensor1_state = {'is_valid': False, 'id': 'ACM0'}
     sensor2_state = {'is_valid': False, 'id': 'ACM1'}
     
-    time.sleep(2)  # Wait for sensors to stabilize
+    time.sleep(1.5)  # Wait for sensors to stabilize
     
     try:
         while True:
