@@ -113,7 +113,7 @@ def compare_distances(distance1, distance2,offset):
     if distance1 is None or distance2 is None:
         return "No rotation: Missing distance data"
     
-    difference = distance1 - distance2 #+ offset
+    difference = distance1 - distance2 + offset
     print(f"Distance difference (ACM0 - ACM1): {difference} mm")
     print(f"Offset ratio with distance 1 : {difference/distance1}")
     print(f"Offset ratio with distance 2 :{difference/distance2}")
@@ -131,7 +131,7 @@ def read_laser():
     sensor1 = setup_serial('/dev/ttyACM0')
     sensor2 = setup_serial('/dev/ttyACM1')
 
-    offset=40    #constant error
+    offset=90    #constant error
 
     # Check if both sensors are initialized
     if not sensor1 or not sensor2:
