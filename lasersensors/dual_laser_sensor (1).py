@@ -156,7 +156,7 @@ def main():
                 print("Sensor ACM0: No distance data received")
             
             # Small delay to avoid overwhelming serial ports
-            time.sleep(0.01)
+            time.sleep(0.001)
             
             # Read and process data from sensor 2
             distance2, is_valid2 = read_sensor2_data(sensor2, sensor2_state)
@@ -171,7 +171,7 @@ def main():
             print(f"Action: {rotation_command}")
             
             print("-" * 40)  # Separator for clarity
-            time.sleep(0.01)  # Minimal delay to reduce CPU load
+            time.sleep(0.001)  # Minimal delay to reduce CPU load
     except KeyboardInterrupt:
         print("\nProgram terminated by user")
     finally:

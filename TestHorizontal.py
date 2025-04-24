@@ -29,6 +29,8 @@ from motors.changedirection.backwardlateralright import backward_lateral_anticlo
 # Importing the camera
 from camera.MiddleCalibrationPiCam import middle_calibration
 
+from camera.TargetCalibation_0424 import process_frame
+
 from motors.movements.stop import stop
 
 # Localize all pins
@@ -43,71 +45,67 @@ all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins
 
 # Main Function
 def main():
-    picam2 = Picamera2()
-    config = picam2.create_preview_configuration(main={"size": (640, 480)})
-    picam2.configure(config)
-    picam2.start()
-    #if not video_capture.isOpened():
-        #print("Error: Could not open camera")
-        #return
+    
+    print("Initializing camera...")
+    camera = cv2.VideoCapture(0, cv2.CAP_V4L2)
 
+    # Set camera properties
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    camera.set(cv2.CAP_PROP_EXPOSURE, -0.3)
+    print("Current Exposure:", camera.get(cv2.CAP_PROP_EXPOSURE))
+
+    center_point = (325, 360)  # Default center point
+    successful=0
     try:
-        #while True:
-            #move_forward(30)
-            vt_position=""
-            while not vt_position:
-                frame = picam2.capture_array()
-                vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                print([vt_position, cam_distance])
-                move_forward(10)
-                if processed_frame is not None and mask is not None:
-                    cv2.imshow("Camera Feed", processed_frame)
-                    cv2.imshow("Mask", mask)
-                if cv2.waitKey(1) & 0xFF == 27:
-                    stop(0,1)
-                    break
-                
-				
-            #if frame is not None and mask is not None:
-                #cv2.imshow("Camera Feed", frame)
-                #cv2.imshow("Mask", mask)
-            # Detect yellow object
-            i=0
-            while True:
-                # Detect wall
-                frame = picam2.capture_array()
-                vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                print([i,vt_position, cam_distance])
-                #cv2.imshow("Camera Feed", frame)
-                if processed_frame is not None and mask is not None:
-                    cv2.imshow("Camera Feed", processed_frame)
-                    cv2.imshow("Mask", mask)
+        while True:
+            frame, mask, x_cmd, y_cmd = process_frame(camera, center_point)
 
-                
-                #cv2.imshow("Mask", mask)
-                if cam_distance <= 20:
-                    stop(0, 1)
-                    break
-                # Move forward at 30% speed until wall is detected
-                move_forward(30)
+            # Display the frame and mask
+            if frame is not None:
+                cv2.imshow("Smart Circle Tracking", frame)
+            if mask is not None:
+                cv2.imshow("Color Mask", mask)
 
-                print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
-                if vt_position == "Left":
-                    print("Adjusting to the left...")
+            # Print movement commands
+            if x_cmd and y_cmd:
+                if x_cmd == "CENTER":
+                    if y_cmd=="CENTER":
+                          stop(0,0.05)
+                          successful+=1
+                          if successful>=10:
+                              break
+                    elif y_cmd=="GO STRAIGHT":
+                        successful=0
+                        move_backward(10)
+                        time.sleep(0.02)
+                        stop(0,0.01)
+                    elif y_cmd=="GO BACK":
+                        successful=0
+                        move_forward(5) #forward means backward because different orientation
+                        time.sleep(0.02)
+                        stop(0,0.01)
+                        
+
+                elif x_cmd=="GO LEFT":
+                   successful=0
+                   move_left(10)
+                   time.sleep(0.02)
+                   stop(0,0.01)
+                elif x_cmd== "GO RIGHT":
+                    successful=0
                     move_right(10)
-                elif vt_position == "Right":
-                    print("Adjusting to the right...")
-                    move_left(10)
-                elif vt_position == "Centered":
-                    print("Yellow object centered. Proceeding...")
-                #time.sleep(0.2)
-                i+=1
-                if cv2.waitKey(1) & 0xFF == 27:
-                    stop(0,1)
-                    break
-					
+                    time.sleep(0.02)
+                    stop(0,0.01)
+                    
+                print(f"X Command: {x_cmd}, Y Command: {y_cmd}")
+
+            # Exit on 'q' key press
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
     finally:
-        # Cleanup
+        camera.release()
+        cv2.destroyAllWindows()
         io.cleanup(all_pins)
 
 if __name__ == "__main__":
