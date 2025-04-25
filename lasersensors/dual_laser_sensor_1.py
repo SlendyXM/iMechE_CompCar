@@ -62,24 +62,23 @@ def read_sensor_data(ser, sensor_state, sensor_id):
 def compare_distances(distance1, distance2, offset):
     """Compare distances from two sensors and return rotation command."""
     if distance1 is None or distance2 is None:
-        return "No rotation: Missing distance data"
+        return "No rotation: Missing distance data",999
 
-    offset = distance1 - distance2
+    offset = distance1 - distance2+35
     ratio=(distance1 - distance2)/distance1
     
 
-    if ratio > 0.2 and -50 < (distance1-distance2) < 50:
+    if offset>10:
         print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
-        return "Anticlockwise",distance1, distance2
-        
-    elif ratio < -0.2 and -50 < (distance1-distance2) < 50:
+        return "Anticlockwise",distance1        
+    elif offset<-10:
         print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
         #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Clockwise",distance1,distance2
+        return "Clockwise",distance1
     else:
         print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
         #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Parallel",distance1,distance2
+        return "Parallel",distance1
 
 
 def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-43):
@@ -96,8 +95,8 @@ def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-4
             return "stop",distance1,distance2
 
     # Compare distances and return rotation command
-    rotation_command = compare_distances(distance1, distance2, offset)
-    return rotation_command
+    rotation_command,distance = compare_distances(distance1, distance2, offset)
+    return rotation_command,distance
 
 
 if __name__ == "__main__":

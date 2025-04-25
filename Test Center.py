@@ -107,7 +107,7 @@ def main():
             move_forward(10)
             vt_position=""
             average_distance=1800
-            while average_distance>500:
+            while average_distance>1000:
                 frame = picam2.capture_array()
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
 
@@ -138,12 +138,17 @@ def main():
                     
                     if Rotate_command == "Parallel":
                         print("Parallel")
+                        break
                         
                     elif Rotate_command == "Anticlockwise":
-                        rotate_anticlockwise_clockwise(5)
+                        rotate_anticlockwise(5)
+                        time.sleep(0.07)
+                        stop(0,0.01)
                         #time.sleep (0.01)
                     elif Rotate_command == "Clockwise":
                         rotate_clockwise(5)
+                        time.sleep(0.07)
+                        stop(0,0.01)
                 while True:
                     
                     frame = picam2.capture_array()
@@ -164,13 +169,19 @@ def main():
                         print("Adjusting to the left...")
                         #forward_lateral_clockwise(5)
                         move_left(5)
+                        time.sleep(0.07)
+                        stop(0,0.2)
                     elif vt_position == "Right":
                         print("Adjusting to the right...")
                         #forward_lateral_anticlockwise(5)
                         move_right(5)
+                        time.sleep(0.2)
+                        stop(0,0.01)
                     elif vt_position == "Centered":
                         print("Yellow object centered. Proceeding...")
                         move_forward(5)
+                        time.sleep(0.2)
+                        stop(0,0.01)
                         break
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                 if Rotate_command == "stop":
