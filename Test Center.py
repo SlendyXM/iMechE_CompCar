@@ -98,7 +98,7 @@ def main():
     camera.set(cv2.CAP_PROP_EXPOSURE, -0.3)
     print("Current Exposure:", camera.get(cv2.CAP_PROP_EXPOSURE))
 
-    center_point = (325, 360)  # Default center point
+    center_point = (337, 365)  # Default center point
     successful=0
     buzzer.sound(False)
 
@@ -192,14 +192,14 @@ def main():
                     cv2.imshow("Mask", mask)
 
 	            # Move backward at 30% speed until reach back to the original position
-                move_backward(30)
+                move_backward(10)
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    backwardleft(30)
+                    backwardleft(10)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    backwardright(30)
+                    backwardright(10)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                 if Rotate_command == "Parallel":
@@ -211,7 +211,6 @@ def main():
                 elif Rotate_command == "Clockwise":
                     backward_lateral_clockwise(10)
                     time.sleep(0.01)
-                #time.sleep(0.2)
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:
                     stop(0,1)
