@@ -4,7 +4,7 @@ import struct
 from typing import List, Tuple, Optional
 
 class PiDeviceController:
-    def _init_(self, serial_port='/dev/ttyACM0', baudrate=115200, timeout=1):
+    def __init__(self, serial_port='/dev/ttyACM0', baudrate=115200, timeout=1):
         """
         Initialize the device controller for Raspberry Pi
         :param serial_port: Default is '/dev/ttyS0' for Pi 3/4, '/dev/ttyAMA0' for older Pi
