@@ -1,4 +1,3 @@
-import RPi.GPIO as io
 import time
 from plunger.servo import Servo
 

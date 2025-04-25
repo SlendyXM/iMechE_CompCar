@@ -38,6 +38,9 @@ from colorsensors.color_detecting import color_detecting
 from buzzer.buzzer import buzzer
 buzzer = buzzer()
 
+# Importing Servo
+from plunger.rotation_servo import servo_control
+
 # Importing the camera
 from camera.MiddleCalibrationPiCam import middle_calibration
 
@@ -200,6 +203,7 @@ def main():
 
 	                # Stop the car
                     stop(0, 1)
+                    servo_control()
 
 	                # Break loop
                     reach_original_target = True
