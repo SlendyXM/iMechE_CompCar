@@ -6,8 +6,8 @@ from picamera2 import Picamera2
 
 # Initializing the GPIO pins
 io.setmode(io.BOARD)
-io.setup(7, io.OUT)  # STBY
-io.output(7, io.HIGH)  # enable board
+io.setup(3, io.OUT)  # STBY
+io.output(3, io.HIGH)  # enable board
 
 # Importing Motor Movements
 from motors.movements.stop import stop
@@ -51,7 +51,7 @@ from leds.red import LED_Red
 
 
 # Localize all pins
-stby_pin                        = [7]
+stby_pin                        = [3]
 motor_a_pins                    = [11, 13, 15]
 motor_b_pins                    = [19, 21, 23]
 motor_c_pins                    = [22, 24, 26]
