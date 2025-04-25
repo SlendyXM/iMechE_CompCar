@@ -6,8 +6,8 @@ from picamera2 import Picamera2
 
 # Initializing the GPIO pins
 io.setmode(io.BOARD)
-io.setup(7, io.OUT)  # STBY
-io.output(7, io.HIGH)  # enable board
+io.setup(3, io.OUT)  # STBY
+io.output(3, io.HIGH)  # enable board
 
 # Importing Motor Movements
 from motors.movements.stop import stop
@@ -51,7 +51,7 @@ from leds.red import LED_Red
 
 
 # Localize all pins
-stby_pin                        = [7]
+stby_pin                        = [3]
 motor_a_pins                    = [11, 13, 15]
 motor_b_pins                    = [19, 21, 23]
 motor_c_pins                    = [22, 24, 26]
@@ -151,16 +151,12 @@ def main():
                 #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
                     stop(0,1)
-<<<<<<< HEAD
                     buzzer.sound(True)  
                     time.sleep(1)                  
-=======
                     #LED_Red()
                     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
                     buzzer.sound(True)
                     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
-
->>>>>>> eec89a22515eb558d7046ea8de0c244c8900d195
                     break
                 # Move forward at 30% speed until wall is detected
                 move_forward(30)
@@ -171,14 +167,11 @@ def main():
                     forwardleft(5)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-<<<<<<< HEAD
                     #forward_lateral_anticlockwise(3)
                     move_left(10)
                 else:
-=======
                     forwardright(5)
                 elif vt_position == "Centered":
->>>>>>> eec89a22515eb558d7046ea8de0c244c8900d195
                     print("Yellow object centered. Proceeding...")
                     
                 if Rotate_command == "Parallel":
@@ -189,13 +182,9 @@ def main():
                     time.sleep (0.01)
                 elif Rotate_command == "Clockwise":
                     forward_lateral_clockwise(10)
-<<<<<<< HEAD
-                    sleep(0.01)'''
-                time.sleep(0.01)
-=======
+                    sleep(0.01)
                     time.sleep(0.01)
                 #time.sleep(0.2)
->>>>>>> eec89a22515eb558d7046ea8de0c244c8900d195
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:
                     stop(0,1)
@@ -263,7 +252,7 @@ def main():
                     print("Not yet detected the original target. Continuing...")
 
 
-#Visual center
+            # Visual center
             while True:
                 frame, mask, x_cmd, y_cmd = process_frame(camera, center_point)
 
