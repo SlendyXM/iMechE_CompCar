@@ -66,11 +66,11 @@ def compare_distances(distance1, distance2, offset):
 
     difference = (distance1 - distance2)/distance1
 
-    if difference > 0.2:
+    if difference > 0.2 and -50 < (distance1-distance2) < 50:
         print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
         return "Anticlockwise"
         
-    elif difference < -0.2:
+    elif difference < -0.2 and -50 < (distance1-distance2) < 50:
         print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
         return "Clockwise"
     else:
@@ -88,7 +88,7 @@ def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-4
 
     # Check for stop condition
     if distance1 is not None and distance2 is not None:
-        if distance1 <= 55 or distance2 <= 55:
+        if distance1 <= 55 or distance2 <= 95:
             return "stop"
 
     # Compare distances and return rotation command

@@ -139,9 +139,7 @@ def main():
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
-                    stop(0,1)
-                    buzzer.sound(True)  
-                    time.sleep(1)                  
+                    stop(0,0.01)                  
                     #LED_Red()
                     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
                     buzzer.sound(True)
@@ -293,6 +291,7 @@ def main():
         sensor2.close()
         camera.release()
         cv2.destroyAllWindows()
+        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [41, 1])
 
 if __name__ == "__main__":
     main()
