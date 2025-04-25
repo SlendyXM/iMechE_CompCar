@@ -173,7 +173,10 @@ class buzzer():
         io.setup(negative_pin, io.OUT)
 
     def sound(self, power):
+        start = time.time()
         while power:
+            if time.time() - start >= 15:
+                return
             io.output(self.positive_pin, io.HIGH)
             io.output(self.negative_pin, io.LOW)
             time.sleep(0.0005)
