@@ -1,12 +1,12 @@
-from ..mB import MotorB
-from ..mD import MotorD
+from ..mA import MotorA
+from ..mC import MotorC
 
-motorB = MotorB()
-motorD = MotorD()
+motorA = MotorA()
+motorC = MotorC()
 
 def forwardright(speed):
-	motorB.forward()
-	motorD.forward()
-	motorB.pwm.ChangeDutyCycle(speed)
-	motorD.pwm.ChangeDutyCycle(speed)
+	motorA.forward()
+	motorC.forward()
+	motorA.pwm.ChangeDutyCycle(speed)
+	motorC.pwm.ChangeDutyCycle(speed)
 	print(f"Moving forward to the right at {speed}% speed")
