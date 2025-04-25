@@ -45,7 +45,7 @@ from plunger.rotation_servo import servo_control
 from camera.MiddleCalibrationPiCam import middle_calibration
 from camera.TargetCalibation_0424 import process_frame
 
-from gpio_board_extension import execute_device_command
+from gpio_board_extension.extension_gpio_board import execute_device_command
 
 from lasersensors.dual_laser_sensor_1 import setup_serial, process_laser_data
 
