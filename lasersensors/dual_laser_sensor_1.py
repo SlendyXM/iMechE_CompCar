@@ -4,7 +4,7 @@ import re
 import time
 
 
-def setup_serial(port, baudrate=115200, timeout=1):
+def setup_serial(port, baudrate=115200, timeout=0.5):
     """Initialize serial connection with error handling."""
     try:
         ser = serial.Serial(port, baudrate, timeout=timeout)
@@ -92,7 +92,7 @@ def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-4
     # Check for stop condition
     if distance1 is not None and distance2 is not None:
         if distance1 <= 55 or distance2 <= 95:
-            return "stop",distance1,distance2
+            return "stop",distance1
 
     # Compare distances and return rotation command
     rotation_command,distance = compare_distances(distance1, distance2, offset)
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     sensor1_state = {'is_valid': False, 'id': 'ACM0'}
     sensor2_state = {'is_valid': False, 'id': 'ACM1'}
 
-    time.sleep(1.5)  # Wait for sensors to stabilize
+    time.sleep(1.5) # Wait for sensors to stabilize
 
     try:
         while True:

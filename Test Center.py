@@ -104,7 +104,7 @@ def main():
 
     try:
         #while True
-            move_forward(10)
+            move_forward(50)
             vt_position=""
             average_distance=1800
             while average_distance>1000:
@@ -113,7 +113,7 @@ def main():
 
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
                 print([vt_position, cam_distance])
-                move_forward(10)
+                move_forward(50)
                 if processed_frame is not None and mask is not None:
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
@@ -126,75 +126,78 @@ def main():
                 cv2.imshow("Mask", mask)
             # Detect yellow object
             i=0
-            while True:
+            #while True:
                 # Detect wall
-                while True:
-                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
-                    print(f"Rotate Action: {Rotate_command} and {average_distance}")
-    
-                    if not sensor1 or not sensor2:
-                        print("Failed to initialize sensors")
-                        break
-                    
-                    if Rotate_command == "Parallel":
-                        print("Parallel")
-                        break
-                        
-                    elif Rotate_command == "Anticlockwise":
-                        rotate_anticlockwise(5)
-                        time.sleep(0.07)
-                        stop(0,0.01)
-                        #time.sleep (0.01)
-                    elif Rotate_command == "Clockwise":
-                        rotate_clockwise(5)
-                        time.sleep(0.07)
-                        stop(0,0.01)
-                while True:
-                    
-                    frame = picam2.capture_array()
-                    vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
-
-                    print([i,vt_position, cam_distance])
-                    
-                    if processed_frame is not None and mask is not None:
-                        cv2.imshow("Camera Feed", processed_frame)
-                        cv2.imshow("Mask", mask)
-
-                    # Move forward at 30% speed until wall is detected
-                    #move_forward(30)
-
-                    print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
-                    if vt_position == "Left":
-                        print("Adjusting to the left...")
-                        move_left(5)
-                        time.sleep(0.07)
-                    elif vt_position == "Right":
-                        print("Adjusting to the right...")
-                        move_right(5)
-                        time.sleep(0.2)
-                    elif vt_position == "Centered":
-                        print("Yellow object centered. Proceeding...")
-                        move_forward(5)
-                        time.sleep(0.2)
-                        break
+            while True:
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
-                if Rotate_command == "stop":
-                    stop(0,0.01)                  
-                    execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
-                    buzzer.sound(True)
-                    execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
-                    break 
+                print(f"Rotate Action: {Rotate_command} and {average_distance}")
 
-
+                if not sensor1 or not sensor2:
+                    print("Failed to initialize sensors")
+                    break
+                
+                if Rotate_command == "Parallel":
+                    print("Parallel")
+                    break
                     
+                elif Rotate_command == "Anticlockwise":
+                    rotate_anticlockwise(5)
+                    time.sleep(0.07)
+                    stop(0,0.01)
+                    #time.sleep (0.01)
+                elif Rotate_command == "Clockwise":
+                    rotate_clockwise(5)
+                    time.sleep(0.07)
+                    stop(0,0.01)
+            while True:
+                
+                frame = picam2.capture_array()
+                vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
 
-                        #time.sleep(0.01)
-                    #time.sleep(0.2)
-                    i+=1
-                    if cv2.waitKey(1) & 0xFF == 27:
-                        stop(0,1)
-                        break
+                print([i,vt_position, cam_distance])
+                
+                if processed_frame is not None and mask is not None:
+                    cv2.imshow("Camera Feed", processed_frame)
+                    cv2.imshow("Mask", mask)
+
+                # Move forward at 30% speed until wall is detected
+                #move_forward(30)
+                if cv2.waitKey(1) & 0xFF == 27:
+                    stop(0,1)
+                    break    
+                print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
+                if vt_position == "Left":
+                    print("Adjusting to the left...")
+                    move_right(1)
+                    time.sleep(0.07)
+                elif vt_position == "Right":
+                    print("Adjusting to the right...")
+                    move_left(1)
+                    time.sleep(0.07)
+                elif vt_position == "Centered":
+                    print("Yellow object centered. Proceeding...")
+                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                    if Rotate_command == "stop":
+                        stop(0,0.01)                  
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
+                        buzzer.sound(True)
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
+                        break 
+                    move_forward(5)
+                    time.sleep(0.07)
+                    
+                
+            
+
+
+                
+
+                    #time.sleep(0.01)
+                #time.sleep(0.2)
+                i+=1
+                if cv2.waitKey(1) & 0xFF == 27:
+                    stop(0,1)
+                    break
                 
             buzzer.sound(False)
             reach_original_target = False
