@@ -13,8 +13,8 @@ def middle_calibration(frame, tolerance=20):
     height, width, _ = frame.shape
     frame_center_x = width // 2
 
-    roi_left = int(0.15 * width)
-    roi_right = int(0.85 * width)
+    roi_left = 0
+    roi_right = width
     roi_top = 0
     roi_bottom = height
 

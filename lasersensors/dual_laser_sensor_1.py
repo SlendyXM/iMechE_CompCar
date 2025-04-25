@@ -64,22 +64,44 @@ def compare_distances(distance1, distance2, offset):
     if distance1 is None or distance2 is None:
         return "No rotation: Missing distance data",999
 
-    offset = distance1 - distance2+35
+    offset = distance1 - distance2+43
     ratio=(distance1 - distance2)/distance1
-    
-
-    if offset>10:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
-        return "Anticlockwise",distance1        
-    elif offset<-10:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
-        #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Clockwise",distance1
-    else:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
-        #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Parallel",distance1
-
+    if distance1<1700:
+        if offset>5:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            return "Anticlockwise",distance1        
+        elif offset<-5:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Clockwise",distance1
+        else:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Parallel",distance1
+    elif distance1<2500:
+        if offset>-10:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            return "Anticlockwise",distance1        
+        elif offset<-30:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Clockwise",distance1
+        else:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Parallel",distance1
+    elif distance1<3500:
+        if offset>-15:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            return "Anticlockwise",distance1        
+        elif offset<-45:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Clockwise",distance1
+        else:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Parallel",distance1
 
 def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-43):
     """Process data from both sensors and return the rotation command."""
