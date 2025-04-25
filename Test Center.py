@@ -90,7 +90,7 @@ def main():
     picam2.start()
 
     print("Initializing camera...")
-    camera = cv2.VideoCapture(0, cv2.CAP_V4L2)
+    camera = cv2.VideoCapture(1, cv2.CAP_V4L2)
 
     # Set camera properties
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -103,7 +103,7 @@ def main():
     buzzer.sound(False)
 
     try:
-        #while True:
+        #while True
             move_forward(10)
             vt_position=""
             while not vt_position:
