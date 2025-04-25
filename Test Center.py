@@ -46,9 +46,8 @@ from camera.MiddleCalibrationPiCam import middle_calibration
 from camera.TargetCalibation_0424 import process_frame
 
 from gpio_board_extension import execute_device_command
-from leds.green import LED_Green
-from leds.red import LED_Red
 
+from lasersensors.dual_laser_sensor_1 import setup_serial, process_laser_data
 
 # Localize all pins
 stby_pin                        = [3]
@@ -69,8 +68,6 @@ all_pins = (stby_pin +
             color_sensor_a_pins + color_sensor_b_pins + color_sensor_c_pins + color_sensor_d_pins + 
             buzzer_pins +
             servo_motor_pin)
-
-from lasersensors.dual_laser_sensor_1 import setup_serial, process_laser_data
 
 # Initialize sensors
 sensor1 = setup_serial('/dev/ttyACM0')
@@ -103,9 +100,6 @@ def main():
 
     center_point = (325, 360)  # Default center point
     successful=0
-    #if not video_capture.isOpened():
-        #print("Error: Could not open camera")
-        #return
     buzzer.sound(False)
 
     try:
@@ -122,33 +116,28 @@ def main():
                     cv2.imshow("Mask", mask)
                 if cv2.waitKey(1) & 0xFF == 27:
                     stop(0,1)
-                    break
-                
+                    break              
 				
-            #if frame is not None and mask is not None:
-                #cv2.imshow("Camera Feed", frame)
-                #cv2.imshow("Mask", mask)
+            if frame is not None and mask is not None:
+                cv2.imshow("Camera Feed", frame)
+                cv2.imshow("Mask", mask)
             # Detect yellow object
             i=0
             while True:
                 # Detect wall
                 frame = picam2.capture_array()
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                #Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
+                Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
 
 
-                #if not sensor1 or not sensor2:
-                    #print("Failed to initialize sensors")
-                    #continue
+                if not sensor1 or not sensor2:
+                    print("Failed to initialize sensors")
+                    continue
                 print([i,vt_position, cam_distance])
-                #print(f"Rotate Action: {Rotate_command}")
-                #cv2.imshow("Camera Feed", frame)
+                print(f"Rotate Action: {Rotate_command}")
                 if processed_frame is not None and mask is not None:
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
-
-                
-                #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
                     stop(0,1)
                     buzzer.sound(True)  
@@ -164,13 +153,10 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    forwardleft(5)
+                    forwardleft(10)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    #forward_lateral_anticlockwise(3)
-                    move_left(10)
-                else:
-                    forwardright(5)
+                    forwardright(10)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                     
@@ -182,7 +168,6 @@ def main():
                     time.sleep (0.01)
                 elif Rotate_command == "Clockwise":
                     forward_lateral_clockwise(10)
-                    sleep(0.01)
                     time.sleep(0.01)
                 #time.sleep(0.2)
                 i+=1
@@ -194,6 +179,7 @@ def main():
             reach_original_target = False
             exitpowersave()
             frequency_scaling_2percent()
+
             # Move backward at 30% speed until reach back to the original position
             move_backward(10)
             time.sleep(2)
@@ -213,10 +199,10 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    move_right(3)
+                    move_right(10)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    move_left(3)
+                    move_left(10)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                 if Rotate_command == "Parallel":
