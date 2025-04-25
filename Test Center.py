@@ -138,9 +138,8 @@ def main():
                 if processed_frame is not None and mask is not None:
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
-                if cam_distance <= 20:
+                if Rotate_command == "stop":
                     stop(0,0.01)                  
-                    #LED_Red()
                     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
                     buzzer.sound(True)
                     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
@@ -151,10 +150,10 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    forwardleft(10)
+                    forwardleft(30)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    forwardright(10)
+                    forwardright(30)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                     
@@ -205,7 +204,7 @@ def main():
                     print("Yellow object centered. Proceeding...")
                 if Rotate_command == "Parallel":
                     print("Parallel")
-                    move_forward(10)
+                    move_backward(10)
                 elif Rotate_command == "Anticlockwise":
                     backward_lateral_anticlockwise(10)
                     time.sleep (0.01)
