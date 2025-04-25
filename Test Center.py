@@ -67,9 +67,6 @@ offset = -43  # Constant error
 sensor1_state = {'is_valid': False, 'id': 'ACM0'}
 sensor2_state = {'is_valid': False, 'id': 'ACM1'}
 
-
-
-
 # Main Function
 def main():
     picam2 = Picamera2()
