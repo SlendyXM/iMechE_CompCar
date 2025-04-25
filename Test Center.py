@@ -122,7 +122,6 @@ def main():
                 if cam_distance <= 20:
                     stop(0,1)
                     buzzer.sound(True)
-                    time.sleep(15)
                     break
                 # Move forward at 30% speed until wall is detected
                 move_forward(30)
