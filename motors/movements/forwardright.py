@@ -9,9 +9,9 @@ motorC = MotorC()
 motorD = MotorD()
 
 def forwardright(speed):
-	motorA.stop()
+	#motorA.stop()
 	motorB.forward()
-	motorC.stop()
+	#motorC.stop()
 	motorD.forward()
 	motorA.pwm.ChangeDutyCycle(0)
 	motorB.pwm.ChangeDutyCycle(speed)

@@ -3,8 +3,7 @@ from serial import Serial
 import re
 import time
 
-
-def setup_serial(port, baudrate=115200, timeout=1):
+def setup_serial(port, baudrate=115200, timeout=0.05):
     """Initialize serial connection with error handling."""
     try:
         ser = serial.Serial(port, baudrate, timeout=timeout)
@@ -16,7 +15,6 @@ def setup_serial(port, baudrate=115200, timeout=1):
         print(f"Error opening serial port {port}: {e}")
         return None
 
-
 def parse_sensor_data(line, sensor_state):
     """Parse a single line of sensor data and update validity state."""
     line = line.strip()
@@ -24,25 +22,22 @@ def parse_sensor_data(line, sensor_state):
     state_match = re.search(r'State:(\d+)', line, re.IGNORECASE)
     distance = None
 
-    # Update validity state if state information is present
     if state_match:
         if state_match.group(1) == '0' and "Range Valid" in line:
             sensor_state['is_valid'] = True
         else:
             sensor_state['is_valid'] = False
 
-    # Extract distance if present
     if distance_match:
         distance = int(distance_match.group(1))
 
     return distance, sensor_state['is_valid']
 
-
-def read_sensor_data(ser, sensor_state, sensor_id):
+def read_sensor_data(ser, sensor_state):
     """Read and process data from a sensor."""
     try:
-        raw_data_1 = ser.readline()  # First line
-        raw_data_2 = ser.readline()  # Second line
+        raw_data_1 = ser.readline()
+        raw_data_2 = ser.readline()
 
         if raw_data_1 and raw_data_2:
             try:
@@ -58,55 +53,76 @@ def read_sensor_data(ser, sensor_state, sensor_id):
     except serial.SerialException:
         return None, False
 
-
-def compare_distances(distance1, distance2, offset):
-    """Compare distances from two sensors and return rotation command."""
+def compare_distances(distance1, distance2):
+    """Compare distances from two sensors using zone-based logic."""
     if distance1 is None or distance2 is None:
-        return "No rotation: Missing distance data"
+        return "No rotation: Missing distance data", 0
 
-    offset = distance1 - distance2
-    ratio=(distance1 - distance2)/distance1
-    
+    offset = distance2 - distance1
+    avg_distance = (distance1 + distance2) / 2
 
-    if ratio > 0.2 and -50 < (distance1-distance2) < 50:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
-        return "Anticlockwise",distance1, distance2
-        
-    elif ratio < -0.2 and -50 < (distance1-distance2) < 50:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
-        #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Clockwise",distance1,distance2
+    if avg_distance < 200:
+        if offset < 30:
+            command = "Anticlockwise"
+        elif offset > 40:
+            command = "Clockwise"
+        else:
+            command = "Parallel"
+
+    elif avg_distance < 500:
+        if offset < 40:
+            command = "Anticlockwise"
+        elif offset > 50:
+            command = "Clockwise"
+        else:
+            command = "Parallel"
+
+    elif avg_distance < 1000:
+        if offset < 45:
+            command = "Anticlockwise"
+        elif offset > 60:
+            command = "Clockwise"
+        else:
+            command = "Parallel"
+
+    elif avg_distance < 1600:
+        if offset < 50:
+            command = "Anticlockwise"
+        elif offset > 70:
+            command = "Clockwise"
+        else:
+            command = "Parallel"
+
+    elif avg_distance < 2600:
+        if offset < 60:
+            command = "Anticlockwise"
+        elif offset > 80:
+            command = "Clockwise"
+        else:
+            command = "Parallel"
+
     else:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
-        #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Parallel",distance1,distance2
+        command = "Parallel"  # Ignore high-distance noise
 
+    print(f"Distance1: {distance1} -- Distance2: {distance2} -- Offset: {offset} -- AvgDist: {avg_distance:.1f} => Action: {command}")
+    return command,avg_distance
 
-def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-43):
+def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state):
     """Process data from both sensors and return the rotation command."""
-    # Read and process data from sensor 1
-    distance1, is_valid1 = read_sensor_data(sensor1, sensor1_state, "ACM0")
+    distance1, is_valid1 = read_sensor_data(sensor1, sensor1_state)
+    distance2, is_valid2 = read_sensor_data(sensor2, sensor2_state)
 
-    # Read and process data from sensor 2
-    distance2, is_valid2 = read_sensor_data(sensor2, sensor2_state, "ACM1")
-
-    # Check for stop condition
     if distance1 is not None and distance2 is not None:
         if distance1 <= 55 or distance2 <= 95:
-            return "stop",distance1,distance2
+            return "stop",distance1
 
-    # Compare distances and return rotation command
-    rotation_command = compare_distances(distance1, distance2, offset)
-    return rotation_command
-
+    rotation_command, average_distance = compare_distances(distance1, distance2)
+    return rotation_command, average_distance
 
 if __name__ == "__main__":
-    # Initialize both sensors
     sensor1 = setup_serial('/dev/ttyACM0')
     sensor2 = setup_serial('/dev/ttyACM1')
-    offset = -43  # Constant error
 
-    # Check if both sensors are initialized
     if not sensor1 or not sensor2:
         print("Failed to initialize one or both serial connections")
         if sensor1:
@@ -115,27 +131,25 @@ if __name__ == "__main__":
             sensor2.close()
         exit()
 
-    # Initialize state tracking for each sensor
     sensor1_state = {'is_valid': False, 'id': 'ACM0'}
     sensor2_state = {'is_valid': False, 'id': 'ACM1'}
 
-    time.sleep(1.5)  # Wait for sensors to stabilize
+    time.sleep(1.5)  # Allow sensors to stabilize
 
     try:
         while True:
-            # Process laser data and get the rotation command
-            command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
-            print(f"Action: {command}")
+            command, average = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+            if average == 0:
+                continue
+            print(f"Action: {command} average {average}")
 
-            # Exit loop if stop condition is met
             if command == "stop":
                 break
 
-            time.sleep(0.01)  # Minimal delay to reduce CPU load
+            time.sleep(0.01)
     except KeyboardInterrupt:
         print("\nProgram terminated by user")
     finally:
-        # Close both serial ports
         if sensor1:
             sensor1.close()
             print("Sensor ACM0 serial port closed")
