@@ -167,21 +167,16 @@ def main():
                     print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                     if vt_position == "Left":
                         print("Adjusting to the left...")
-                        #forward_lateral_clockwise(5)
                         move_left(5)
                         time.sleep(0.07)
-                        stop(0,0.2)
                     elif vt_position == "Right":
                         print("Adjusting to the right...")
-                        #forward_lateral_anticlockwise(5)
                         move_right(5)
                         time.sleep(0.2)
-                        stop(0,0.01)
                     elif vt_position == "Centered":
                         print("Yellow object centered. Proceeding...")
                         move_forward(5)
                         time.sleep(0.2)
-                        stop(0,0.01)
                         break
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                 if Rotate_command == "stop":
