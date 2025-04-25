@@ -134,14 +134,14 @@ def main():
                 # Detect wall
                 frame = picam2.capture_array()
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
+                #Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
 
 
-                if not sensor1 or not sensor2:
-                    print("Failed to initialize sensors")
+                #if not sensor1 or not sensor2:
+                    #print("Failed to initialize sensors")
                     #continue
                 print([i,vt_position, cam_distance])
-                print(f"Rotate Action: {Rotate_command}")
+                #print(f"Rotate Action: {Rotate_command}")
                 #cv2.imshow("Camera Feed", frame)
                 if processed_frame is not None and mask is not None:
                     cv2.imshow("Camera Feed", processed_frame)
@@ -151,11 +151,12 @@ def main():
                 #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
                     stop(0,1)
+                    buzzer.sound(True)  
+                    time.sleep(1)                  
                     #LED_Red()
                     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
                     buzzer.sound(True)
                     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
-
                     break
                 # Move forward at 30% speed until wall is detected
                 move_forward(30)
@@ -166,6 +167,9 @@ def main():
                     forwardleft(5)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
+                    #forward_lateral_anticlockwise(3)
+                    move_left(10)
+                else:
                     forwardright(5)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
@@ -178,6 +182,7 @@ def main():
                     time.sleep (0.01)
                 elif Rotate_command == "Clockwise":
                     forward_lateral_clockwise(10)
+                    sleep(0.01)
                     time.sleep(0.01)
                 #time.sleep(0.2)
                 i+=1
@@ -247,7 +252,7 @@ def main():
                     print("Not yet detected the original target. Continuing...")
 
 
-#Visual center
+            # Visual center
             while True:
                 frame, mask, x_cmd, y_cmd = process_frame(camera, center_point)
 
