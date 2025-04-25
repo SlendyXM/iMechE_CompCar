@@ -47,7 +47,7 @@ all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins
 def main():
     
     print("Initializing camera...")
-    camera = cv2.VideoCapture(0, cv2.CAP_V4L2)
+    camera = cv2.VideoCapture(1, cv2.CAP_V4L2)
 
     # Set camera properties
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)

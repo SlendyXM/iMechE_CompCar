@@ -45,7 +45,7 @@ buzzer_pins                     = [12, 16]
 
 all_pins = stby_pin + motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + color_sensor_a_pins + buzzer_pins
 
-move_forward(100)
+move_backward(30)
 time.sleep(20)
 stop(0,1)
 io.cleanup(all_pins)

@@ -106,8 +106,11 @@ def main():
         #while True
             move_forward(10)
             vt_position=""
-            while not vt_position:
+            distance1=1800
+            while distance1>1400 or distance2>1400:
                 frame = picam2.capture_array()
+                Rotate_command,distance1,distance2 = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
+
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
                 print([vt_position, cam_distance])
                 move_forward(10)
@@ -127,7 +130,7 @@ def main():
                 # Detect wall
                 frame = picam2.capture_array()
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                Rotate_command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
+                Rotate_command,distance1,distance2 = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
 
 
                 if not sensor1 or not sensor2:
@@ -150,10 +153,10 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    forwardleft(30)
+                    forwardleft(10)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    forwardright(30)
+                    forwardright(10)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                     

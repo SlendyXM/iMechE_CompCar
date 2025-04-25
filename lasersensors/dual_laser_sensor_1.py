@@ -64,18 +64,22 @@ def compare_distances(distance1, distance2, offset):
     if distance1 is None or distance2 is None:
         return "No rotation: Missing distance data"
 
-    difference = (distance1 - distance2)/distance1
+    offset = distance1 - distance2
+    ratio=(distance1 - distance2)/distance1
+    
 
-    if difference > 0.2 and -50 < (distance1-distance2) < 50:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Anticlockwise"
+    if ratio > 0.2 and -50 < (distance1-distance2) < 50:
+        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+        return ("Anticlockwise",distance1, distance2)
         
-    elif difference < -0.2 and -50 < (distance1-distance2) < 50:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Clockwise"
+    elif ratio < -0.2 and -50 < (distance1-distance2) < 50:
+        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+        #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+        return ("Clockwise",distance1,distance2)
     else:
-        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
-        return "Parallel"
+        print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+        #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+        return ("Parallel",distance1,distance2)
 
 
 def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-43):
