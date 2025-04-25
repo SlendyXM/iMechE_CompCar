@@ -1,12 +1,12 @@
-from ..mA import MotorA
-from ..mC import MotorC
+from ..mB import MotorB
+from ..mD import MotorD
 
-motorA = MotorA()
-motorC = MotorC()
+motorB = MotorB()
+motorD = MotorD()
 
 def backwardleft(speed):
-	motorA.backward()
-	motorC.backward()
-	motorA.pwm.ChangeDutyCycle(speed)
-	motorC.pwm.ChangeDutyCycle(speed)
+	motorB.backward()
+	motorD.backward()
+	motorB.pwm.ChangeDutyCycle(speed)
+	motorD.pwm.ChangeDutyCycle(speed)
 	print(f"Moving backward to the left at {speed}% speed")
