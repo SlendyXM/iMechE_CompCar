@@ -34,7 +34,7 @@ from camera.TargetCalibation_0424 import process_frame
 from motors.movements.stop import stop
 
 # Localize all pins
-stby_pin = [3]
+stby_pin = [7]
 motor_a_pins = [11, 13, 15]
 motor_b_pins = [19, 21, 23]
 motor_c_pins = [22, 24, 26]

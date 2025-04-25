@@ -43,6 +43,12 @@ from plunger.rotation_servo import servo_control
 
 # Importing the camera
 from camera.MiddleCalibrationPiCam import middle_calibration
+from camera.TargetCalibation_0424 import process_frame
+
+from gpio_board_extension import execute_device_command
+from leds.green import LED_Green
+from leds.red import LED_Red
+
 
 # Localize all pins
 stby_pin                        = [7]
@@ -55,13 +61,14 @@ color_sensor_b_pins             = []
 color_sensor_c_pins             = []
 color_sensor_d_pins             = []
 buzzer_pins                     = [12, 16]
+servo_motor_pin                 = [8]
 
 # Combine all pins into a single list
 all_pins = (stby_pin + 
             motor_a_pins + motor_b_pins + motor_c_pins + motor_d_pins + 
             color_sensor_a_pins + color_sensor_b_pins + color_sensor_c_pins + color_sensor_d_pins + 
-            buzzer_pins)
-
+            buzzer_pins +
+            servo_motor_pin)
 
 from lasersensors.dual_laser_sensor_1 import setup_serial, process_laser_data
 
@@ -74,12 +81,28 @@ offset = -43  # Constant error
 sensor1_state = {'is_valid': False, 'id': 'ACM0'}
 sensor2_state = {'is_valid': False, 'id': 'ACM1'}
 
+Extension_GPIO_Port = "/dev/ttyACM2"
+
 # Main Function
 def main():
+    #LED_Green()
+    execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [41, 1])
     picam2 = Picamera2()
     config = picam2.create_preview_configuration(main={"size": (640, 480)})
     picam2.configure(config)
     picam2.start()
+
+    print("Initializing camera...")
+    camera = cv2.VideoCapture(0, cv2.CAP_V4L2)
+
+    # Set camera properties
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    camera.set(cv2.CAP_PROP_EXPOSURE, -0.3)
+    print("Current Exposure:", camera.get(cv2.CAP_PROP_EXPOSURE))
+
+    center_point = (325, 360)  # Default center point
+    successful=0
     #if not video_capture.isOpened():
         #print("Error: Could not open camera")
         #return
@@ -128,7 +151,11 @@ def main():
                 #cv2.imshow("Mask", mask)
                 if cam_distance <= 20:
                     stop(0,1)
+                    #LED_Red()
+                    execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
                     buzzer.sound(True)
+                    execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
+
                     break
                 # Move forward at 30% speed until wall is detected
                 move_forward(30)
@@ -143,15 +170,15 @@ def main():
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                     
-                '''if Rotate_command == "Parallel":
+                if Rotate_command == "Parallel":
                     print("Parallel")
                     move_forward(10)
                 elif Rotate_command == "Anticlockwise":
                     forward_lateral_anticlockwise(10)
-                    sleep (0.01)
+                    time.sleep (0.01)
                 elif Rotate_command == "Clockwise":
                     forward_lateral_clockwise(10)
-                    sleep(0.01)'''
+                    time.sleep(0.01)
                 #time.sleep(0.2)
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:
@@ -187,6 +214,15 @@ def main():
                     move_left(3)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
+                if Rotate_command == "Parallel":
+                    print("Parallel")
+                    move_forward(10)
+                elif Rotate_command == "Anticlockwise":
+                    backward_lateral_anticlockwise(10)
+                    time.sleep (0.01)
+                elif Rotate_command == "Clockwise":
+                    backward_lateral_clockwise(10)
+                    time.sleep(0.01)
                 #time.sleep(0.2)
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:
@@ -209,11 +245,63 @@ def main():
                     reach_original_target = True
                 else:
                     print("Not yet detected the original target. Continuing...")
+
+
+#Visual center
+            while True:
+                frame, mask, x_cmd, y_cmd = process_frame(camera, center_point)
+
+                # Display the frame and mask
+                if frame is not None:
+                    cv2.imshow("Smart Circle Tracking", frame)
+                if mask is not None:
+                    cv2.imshow("Color Mask", mask)
+
+                # Print movement commands
+                if x_cmd and y_cmd:
+                    if x_cmd == "CENTER":
+                        if y_cmd=="CENTER":
+                              stop(0,0.05)
+                              successful+=1
+                              if successful>=10:
+                                  break
+                        elif y_cmd=="GO STRAIGHT":
+                            successful=0
+                            move_backward(10)
+                            time.sleep(0.02)
+                            stop(0,0.01)
+                        elif y_cmd=="GO BACK":
+                            successful=0
+                            move_forward(5) #forward means backward because different orientation
+                            time.sleep(0.02)
+                            stop(0,0.01)
+                        
+
+                    elif x_cmd=="GO LEFT":
+                       successful=0
+                       move_left(10)
+                       time.sleep(0.02)
+                       stop(0,0.01)
+                    elif x_cmd== "GO RIGHT":
+                        successful=0
+                        move_right(10)
+                        time.sleep(0.02)
+                        stop(0,0.01)
+                    
+                    print(f"X Command: {x_cmd}, Y Command: {y_cmd}")
+
+                # Exit on 'q' key press
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+
+
     finally:
         # Cleanup
         io.cleanup(all_pins)
         sensor1.close()
         sensor2.close()
+        camera.release()
+        cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()

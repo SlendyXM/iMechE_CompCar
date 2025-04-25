@@ -176,7 +176,7 @@ class buzzer():
         start = time.time()
         while power:
             if time.time() - start >= 15:
-                break
+                return
             io.output(self.positive_pin, io.HIGH)
             io.output(self.negative_pin, io.LOW)
             time.sleep(0.0005)
