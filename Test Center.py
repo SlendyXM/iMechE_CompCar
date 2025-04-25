@@ -196,10 +196,10 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    move_right(10)
+                    backwardleft(30)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    move_left(10)
+                    backwardright(30)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                 if Rotate_command == "Parallel":
