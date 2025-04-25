@@ -16,6 +16,10 @@ from motors.movements.forward import move_forward
 from motors.movements.backward import move_backward
 from motors.movements.left import move_left
 from motors.movements.right import move_right
+from motors.movements.forwardleft import forwardleft
+from motors.movements.forwardright import forwardright
+from motors.movements.backwardleft import backwardleft
+from motors.movements.backwardright import backwardright
 
 from motors.rotations.clockwise import rotate_clockwise
 from motors.rotations.anticlockwise import rotate_anticlockwise
@@ -129,12 +133,10 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    #forward_lateral_clockwise(3)
-                    move_right(10)
+                    forwardleft(5)
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    #forward_lateral_anticlockwise(3)
-                    move_left(10)
+                    forwardright(5)
                 elif vt_position == "Centered":
                     print("Yellow object centered. Proceeding...")
                     
@@ -152,7 +154,6 @@ def main():
                 if cv2.waitKey(1) & 0xFF == 27:
                     stop(0,1)
                     break
-			
                 
             buzzer.sound(False)
             reach_original_target = False
