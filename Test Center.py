@@ -511,8 +511,8 @@ def main():
             
             
             
-            '''while not reach_original_target:
-
+            while not reach_original_target:
+'''
                 # Detect wall
                 frame = picam2.capture_array()
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
@@ -545,7 +545,7 @@ def main():
                 i+=1
                 if cv2.waitKey(1) & 0xFF == 27:
                     stop(0,1)
-                    break
+                    break'''
 
 	            # Color detection method for the original target
                 result = color_detecting()
@@ -562,7 +562,7 @@ def main():
 	                # Break loop
                     reach_original_target = True
                 else:
-                    print("Not yet detected the original target. Continuing...")'''
+                    print("Not yet detected the original target. Continuing...")
 
             
             # Visual center
@@ -656,7 +656,7 @@ def main():
                         break
             Temp,initial_distance=process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
             
-            move_forward(50)
+            move_forward(10)
             vt_position=""
             average_distance=1800
             while average_distance>1500:
@@ -665,7 +665,7 @@ def main():
 
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
                 print([vt_position, cam_distance])
-                move_forward(50)
+                move_forward(10)
                 if processed_frame is not None and mask is not None:
                     cv2.imshow("Camera Feed", processed_frame)
                     cv2.imshow("Mask", mask)
