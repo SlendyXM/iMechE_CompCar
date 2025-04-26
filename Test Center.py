@@ -175,8 +175,8 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    move_right(3)
-                    time.sleep(0.005)
+                    move_right(5)
+                    time.sleep(0.05)
                     stop(0, 0.01)
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                     if Rotate_command == "stop":
@@ -188,8 +188,8 @@ def main():
                         break 
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    move_left(3)
-                    time.sleep(0.005)
+                    move_left(5)
+                    time.sleep(0.05)
                     stop(0, 0.01)
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                     if Rotate_command == "stop":
@@ -353,7 +353,7 @@ def main():
 
             Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
 
-            while average_distance< (initial_distance-800):
+            while average_distance< (initial_distance-500):
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                 move_backward(50)
                 print(average_distance)
