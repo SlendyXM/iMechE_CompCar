@@ -13,7 +13,7 @@ colorsensorA = Color_SensorA()
 
 cycle = 10
 
-def detect_color(sensor, sensor_name):
+'''def detect_color(sensor, sensor_name):
     """Detect the color using the specified sensor with polling."""
     try:
         # Activate red filter and measure frequency
@@ -54,9 +54,9 @@ def detect_color(sensor, sensor_name):
     except RuntimeError as e:
         print(f"Error detecting color for {sensor_name}: {e}")
         return None
+'''
 
-
-def measure_frequency(pin, color, sensor_name, timeout = 0.03): # Timeout = 0.03s
+'''def measure_frequency(pin, color, sensor_name, timeout = 0.03): # Timeout = 0.03s
     """Measure the frequency of falling edges on the specified GPIO pin."""
     impulse_count = 0
     start_time = time.time()
@@ -72,12 +72,99 @@ def measure_frequency(pin, color, sensor_name, timeout = 0.03): # Timeout = 0.03
     if impulse_count == 0:
         print(f"{sensor_name} - No impulses detected for {color} filter.")
     return impulse_count / timeout  # Frequency in Hz
+'''
 
+import threading
+
+def measure_frequency(pin, color, sensor_name, timeout=0.03):
+    """Measure the frequency of falling edges on the specified GPIO pin using event detection."""
+    impulse_count = 0
+
+    def edge_callback(channel):
+        nonlocal impulse_count
+        impulse_count += 1
+
+    # Set up event detection for falling edges
+    io.add_event_detect(pin, io.FALLING, callback=edge_callback)
+
+    # Wait for the specified timeout
+    time.sleep(timeout)
+
+    # Remove event detection to clean up
+    io.remove_event_detect(pin)
+
+    if impulse_count == 0:
+        print(f"{sensor_name} - No impulses detected for {color} filter.")
+    return impulse_count / timeout  # Frequency in Hz
+
+
+
+
+def measure_frequency_parallel(sensor, color, sensor_name, result_dict):
+    """Measure frequency for a specific color filter in a separate thread."""
+    result_dict[color] = measure_frequency(sensor.out, color, sensor_name)
+
+def detect_color_parallel(sensor, sensor_name):
+    """Detect the color using the specified sensor with parallel polling."""
+    try:
+        # Activate filters and measure frequencies in parallel
+        result_dict = {}
+        threads = []
+
+        # Red filter
+        red()
+        red_thread = threading.Thread(target=measure_frequency_parallel, args=(sensor, "red", sensor_name, result_dict))
+        threads.append(red_thread)
+        red_thread.start()
+
+        # Blue filter
+        blue()
+        blue_thread = threading.Thread(target=measure_frequency_parallel, args=(sensor, "blue", sensor_name, result_dict))
+        threads.append(blue_thread)
+        blue_thread.start()
+
+        # Green filter
+        green()
+        green_thread = threading.Thread(target=measure_frequency_parallel, args=(sensor, "green", sensor_name, result_dict))
+        threads.append(green_thread)
+        green_thread.start()
+
+        # Wait for all threads to complete
+        for thread in threads:
+            thread.join()
+
+        # Retrieve measured values
+        red_value = result_dict.get("red", 0)
+        blue_value = result_dict.get("blue", 0)
+        green_value = result_dict.get("green", 0)
+
+        # Print the detected values
+        print(f"{sensor_name} - R:{red_value:.2f} G:{green_value:.2f} B:{blue_value:.2f}")
+
+        # Determine the color based on the measured values
+        if red_value >= 300 and green_value >= 300 and blue_value >= 300:
+            print(f"{sensor_name} - white")
+            return "white"
+        elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
+            print(f"{sensor_name} - black")
+            return "black"
+        elif red_value < blue_value and green_value < blue_value and blue_value >= 300:
+            print(f"{sensor_name} - blue")
+            return "blue"
+        elif red_value >= 300 and green_value < red_value and blue_value < red_value:
+            print(f"{sensor_name} - red")
+            return "red"
+        else:
+            print(f"{sensor_name} - wood")
+            return "wood"
+    except RuntimeError as e:
+        print(f"Error detecting color for {sensor_name}: {e}")
+        return None
 
 def color_detecting():
     while True:
         # Detect color for Sensor A
-        color_a = detect_color(colorsensorA, "Color Sensor A")
+        color_a = detect_color_parallel(colorsensorA, "Color Sensor A")
         print(f"Detected by Color Sensor A: {color_a}")
 
         '''# Detect color for Sensor B
