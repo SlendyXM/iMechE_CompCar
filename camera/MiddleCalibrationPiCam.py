@@ -17,10 +17,6 @@ def middle_calibration(frame, tolerance=20):
     height, width, _ = frame.shape
     frame_center_x = width // 2
 
-    # Define HSV ranges for yellow-to-brown (wood colors)
-    lower_yellow_brown = np.array([10, 30, 80])  # Expanded range for wood
-    upper_yellow_brown = np.array([40, 255, 255])  # Expanded range for wood
-
     # Define HSV range for blue
     lower_blue = np.array([90, 50, 50])  # Adjusted for lighter and darker blue
     upper_blue = np.array([140, 255, 255])  # Adjusted for lighter and darker blue
@@ -28,75 +24,50 @@ def middle_calibration(frame, tolerance=20):
     # Convert frame to HSV
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    # Create a mask for yellow-to-brown (wood colors)
-    wood_mask = cv2.inRange(hsv_frame, lower_yellow_brown, upper_yellow_brown)
-    wood_mask = cv2.morphologyEx(wood_mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
-    wood_mask = cv2.morphologyEx(wood_mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
-
     # Create a mask for blue
     blue_mask = cv2.inRange(hsv_frame, lower_blue, upper_blue)
     blue_mask = cv2.morphologyEx(blue_mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
     blue_mask = cv2.morphologyEx(blue_mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
 
-    # Combine the wood mask and blue mask to isolate blue within the wood region
-    combined_mask = cv2.bitwise_and(wood_mask, blue_mask)
-
-    # Find contours in the yellow-to-brown mask
-    wood_contours, _ = cv2.findContours(wood_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Find contours in the blue mask
+    blue_contours, _ = cv2.findContours(blue_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     blue_position = ""
     distance_to_blue = 100000000
 
-    if wood_contours:
-        # Find the largest yellow-to-brown contour
-        largest_wood_contour = max(wood_contours, key=cv2.contourArea)
-        wood_area = cv2.contourArea(largest_wood_contour)
+    if blue_contours:
+        # Find the largest blue contour
+        largest_blue_contour = max(blue_contours, key=cv2.contourArea)
+        blue_area = cv2.contourArea(largest_blue_contour)
 
-        if wood_area > 50:  # Filter small contours
-            # Create a bounding box around the yellow-to-brown region
-            x, y, w, h = cv2.boundingRect(largest_wood_contour)
+        if blue_area > 50:  # Filter small contours
+            x, y, w, h = cv2.boundingRect(largest_blue_contour)
+            label_center_x = x + w // 2
 
-            # Apply the combined mask to the bounding box
-            roi_combined_mask = combined_mask[y:y + h, x:x + w]
+            # Distance Calculation
+            distance_to_blue = (KNOWN_WIDTH * FOCAL_LENGTH) / w
 
-            # Find contours in the combined mask
-            blue_contours, _ = cv2.findContours(roi_combined_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            # Determine the position of the blue marker
+            if abs(label_center_x - frame_center_x) <= tolerance:
+                blue_position = "Centered"
+            elif label_center_x < frame_center_x - tolerance:
+                blue_position = "Left"
+            elif label_center_x > frame_center_x + tolerance:
+                blue_position = "Right"
 
-            if blue_contours:
-                # Find the largest blue contour within the yellow-to-brown region
-                largest_blue_contour = max(blue_contours, key=cv2.contourArea)
-                blue_area = cv2.contourArea(largest_blue_contour)
+            # Draw bounding boxes and labels
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            cv2.putText(frame, f"Blue is: {blue_position}", (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+            cv2.putText(frame, f"Distance: {distance_to_blue:.2f} cm", (10, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
-                if blue_area > 50:  # Filter small contours
-                    bx, by, bw, bh = cv2.boundingRect(largest_blue_contour)
-                    label_center_x = x + bx + bw // 2
-                    absolute_label_center_x = label_center_x
-
-                    # Distance Calculation
-                    distance_to_blue = (KNOWN_WIDTH * FOCAL_LENGTH) / bw
-
-                    # Determine the position of the blue marker
-                    if abs(absolute_label_center_x - frame_center_x) <= tolerance:
-                        blue_position = "Centered"
-                    elif absolute_label_center_x < frame_center_x - tolerance:
-                        blue_position = "Left"
-                    elif absolute_label_center_x > frame_center_x + tolerance:
-                        blue_position = "Right"
-
-                    # Draw bounding boxes and labels
-                    cv2.rectangle(frame, (x + bx, y + by), (x + bx + bw, y + by + bh), (255, 0, 0), 2)
-                    cv2.putText(frame, f"Blue is: {blue_position}", (10, 30),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
-                    cv2.putText(frame, f"Distance: {distance_to_blue:.2f} cm", (10, 60),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
-
-    # Debugging: Display masks
-    cv2.imshow("Wood Mask", wood_mask)
+    # Debugging: Display the blue mask
     cv2.imshow("Blue Mask", blue_mask)
-    cv2.imshow("Combined Mask", combined_mask)
 
     # Return position, distance, frame, and mask for debugging
-    return blue_position, distance_to_blue, frame, wood_mask
+    return blue_position, distance_to_blue, frame, blue_mask
+
 
 
 
