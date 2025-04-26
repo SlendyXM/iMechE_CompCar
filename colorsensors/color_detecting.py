@@ -1,8 +1,8 @@
 import RPi.GPIO as io
 import time
-io.setmode(io.BOARD)
+'''io.setmode(io.BOARD)
 io.setup(3, io.OUT)
-io.output(3, io.HIGH)
+io.output(3, io.HIGH)'''
 from csA import Color_SensorA
 from frequencyscaling import frequency_scaling_20percent
 #from colorsensors.csB import Color_SensorB
