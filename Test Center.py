@@ -43,6 +43,7 @@ from plunger.rotation_servo import servo_control
 
 # Importing the camera
 from camera.MiddleCalibrationPiCam import middle_calibration
+from camera.MiddleCalibrationPiCam_Green import middle_calibration_green
 from camera.TargetCalibation_0424 import process_frame
 
 from gpio_board_extension.extension_gpio_board import execute_device_command
@@ -175,8 +176,8 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    move_right(5)
-                    time.sleep(0.05)
+                    move_right(10)
+                    time.sleep(0.07)
                     stop(0, 0.01)
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                     if Rotate_command == "stop":
@@ -188,8 +189,8 @@ def main():
                         break 
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    move_left(5)
-                    time.sleep(0.05)
+                    move_left(10)
+                    time.sleep(0.07)
                     stop(0, 0.01)
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                     if Rotate_command == "stop":
@@ -204,7 +205,7 @@ def main():
                     print("Yellow object centered. Proceeding...")
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                     print(Rotate_command)
-                    move_forward(5)
+                    move_forward(10)
                     time.sleep(0.07)
                     if Rotate_command == "stop":
                         
@@ -255,9 +256,11 @@ def main():
 
             # Move backward at 30% speed until reach back to the original position
             move_backward(10)
+            
             time.sleep(2)
             stop(0,0.4)
             i=0
+            servo_control()
             while True:
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                 print(f"Rotate Action: {Rotate_command} and {average_distance}")
@@ -347,13 +350,15 @@ def main():
                     i=0
             
             
- 
+            move_left(10)
+            time.sleep(0.07)
+            stop(0,0.01)
 
 
 
             Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
 
-            while average_distance< (initial_distance-150):
+            while average_distance< (initial_distance-200):
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                 move_backward(50)
                 print(average_distance)
@@ -373,9 +378,44 @@ def main():
             
             stop(0,1)'''
             
-            
-            
+            i=0
             while True:
+                
+                frame = picam2.capture_array()
+                vt_position, cam_distance, processed_frame, mask = middle_calibration_green(frame)
+
+                print([i,vt_position, cam_distance])
+                
+                if processed_frame is not None and mask is not None:
+                    cv2.imshow("Camera Feed", processed_frame)
+                    cv2.imshow("Mask", mask)
+
+                # Move forward at 30% speed until wall is detected
+                #move_forward(30)
+                if cv2.waitKey(1) & 0xFF == 27:
+                    stop(0,1)
+                    break    
+                print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
+                if vt_position == "Left":
+                    print("Adjusting to the left...")
+                    i=0
+                    rotate_anticlockwise(5)
+                    time.sleep(0.02)
+                    stop(0,0.01)
+                elif vt_position == "Right":
+                    i=0
+                    print("Adjusting to the right...")
+                    rotate_clockwise(5)
+                    time.sleep(0.02)
+                    stop(0,0.01)
+                elif vt_position == "Centered":
+                    i+=1
+                    print("Yellow object centered. Proceeding...")
+                    if i >10:
+                        break
+            
+            
+            '''while True:
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                 print(f"Rotate Action: {Rotate_command} and {average_distance}")
 
@@ -401,7 +441,8 @@ def main():
                     stop(0,0.01)
                     i=0
             
-            '''i=0
+                        
+            i=0
             while True:
                 
                 frame = picam2.capture_array()
@@ -422,18 +463,22 @@ def main():
                 if vt_position == "Left":
                     print("Adjusting to the left...")
                     i=0
-                    move_right(5)
-                    time.sleep(0.02)
+                    move_right(10)
+                    time.sleep(0.07)
+                    stop(0,0.01)
                 elif vt_position == "Right":
                     i=0
                     print("Adjusting to the right...")
-                    move_left(5)
-                    time.sleep(0.02)
+                    move_left(10)
+                    time.sleep(0.07)
+                    stop(0,0.01)
                 elif vt_position == "Centered":
                     i+=1
                     print("Yellow object centered. Proceeding...")
                     if i >10:
-                        break'''
+                        break
+            
+
             
             while True:
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
@@ -459,11 +504,11 @@ def main():
                     rotate_clockwise(5)
                     time.sleep(0.03)
                     stop(0,0.01)
-                    i=0
+                    i=0'''
             
             
             
-            while not reach_original_target:
+            '''while not reach_original_target:
 
                 # Detect wall
                 frame = picam2.capture_array()
@@ -514,9 +559,9 @@ def main():
 	                # Break loop
                     reach_original_target = True
                 else:
-                    print("Not yet detected the original target. Continuing...")
+                    print("Not yet detected the original target. Continuing...")'''
 
-
+            
             # Visual center
             while True:
                 frame, mask, x_cmd, y_cmd = process_frame(camera, center_point)
@@ -526,7 +571,9 @@ def main():
                     cv2.imshow("Smart Circle Tracking", frame)
                 if mask is not None:
                     cv2.imshow("Color Mask", mask)
-
+                
+                if frame == None:
+                    break
                 # Print movement commands
                 if x_cmd and y_cmd:
                     if x_cmd == "CENTER":
@@ -563,6 +610,180 @@ def main():
                 # Exit on 'q' key press
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
+            
+            
+            
+            i=0
+            
+
+            
+            while True:
+                
+                frame = picam2.capture_array()
+                vt_position, cam_distance, processed_frame, mask = middle_calibration_green(frame)
+
+                print([i,vt_position, cam_distance])
+                
+                if processed_frame is not None and mask is not None:
+                    cv2.imshow("Camera Feed", processed_frame)
+                    cv2.imshow("Mask", mask)
+
+                # Move forward at 30% speed until wall is detected
+                #move_forward(30)
+                if cv2.waitKey(1) & 0xFF == 27:
+                    stop(0,1)
+                    break    
+                print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
+                if vt_position == "Left":
+                    print("Adjusting to the left...")
+                    i=0
+                    rotate_anticlockwise(5)
+                    time.sleep(0.02)
+                    stop(0,0.01)
+                elif vt_position == "Right":
+                    i=0
+                    print("Adjusting to the right...")
+                    rotate_clockwise(5)
+                    time.sleep(0.02)
+                    stop(0,0.01)
+                elif vt_position == "Centered":
+                    i+=1
+                    print("Yellow object centered. Proceeding...")
+                    if i >10:
+                        break
+            Temp,initial_distance=process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+            
+            move_forward(50)
+            vt_position=""
+            average_distance=1800
+            while average_distance>1500:
+                frame = picam2.capture_array()
+                Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+
+                vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
+                print([vt_position, cam_distance])
+                move_forward(50)
+                if processed_frame is not None and mask is not None:
+                    cv2.imshow("Camera Feed", processed_frame)
+                    cv2.imshow("Mask", mask)
+                if cv2.waitKey(1) & 0xFF == 27:
+                    stop(0,1)
+                    break              
+				
+            if frame is not None and mask is not None:
+                cv2.imshow("Camera Feed", frame)
+                cv2.imshow("Mask", mask)
+            # Detect yellow object
+            i=0
+            #while True:
+                # Detect wall
+            
+            while True:
+                Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                if i ==0:
+                    First_Rotate_command=Rotate_command
+                i+=1
+                print(f"Rotate Action: {Rotate_command} and {average_distance}")
+
+                if not sensor1 or not sensor2:
+                    print("Failed to initialize sensors")
+                    break
+                
+                if Rotate_command == "Parallel":
+                    print("Parallel")
+                    break
+                    
+                elif Rotate_command == "Anticlockwise":
+                    rotate_anticlockwise(5)
+                    time.sleep(0.07)
+                    stop(0,0.01)
+                    #time.sleep (0.01)
+                elif Rotate_command == "Clockwise":
+                    rotate_clockwise(5)
+                    time.sleep(0.07)
+                    stop(0,0.01)
+                
+            while True:
+                
+                frame = picam2.capture_array()
+                vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
+
+                print([i,vt_position, cam_distance])
+                
+                if processed_frame is not None and mask is not None:
+                    cv2.imshow("Camera Feed", processed_frame)
+                    cv2.imshow("Mask", mask)
+
+                # Move forward at 30% speed until wall is detected
+                #move_forward(30)
+                if cv2.waitKey(1) & 0xFF == 27:
+                    stop(0,1)
+                    break    
+                print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
+                if vt_position == "Left":
+                    print("Adjusting to the left...")
+                    move_right(10)
+                    time.sleep(0.07)
+                    stop(0, 0.01)
+                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                    if Rotate_command == "stop":
+                        
+                        stop(0,0.01)                  
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
+                        buzzer.sound(True)
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
+                        break 
+                elif vt_position == "Right":
+                    print("Adjusting to the right...")
+                    move_left(10)
+                    time.sleep(0.07)
+                    stop(0, 0.01)
+                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                    if Rotate_command == "stop":
+                        
+                        stop(0,0.01)                  
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
+                        buzzer.sound(True)
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
+                        break 
+                elif vt_position == "Centered":
+                    stop(0,0.01)
+                    print("Yellow object centered. Proceeding...")
+                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                    print(Rotate_command)
+                    move_forward(10)
+                    time.sleep(0.07)
+                    if Rotate_command == "stop":
+                        
+                        stop(0,0.01)                  
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
+                        buzzer.sound(True)
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
+                        break 
+                    move_forward(5)
+                    time.sleep(0.07)
+                        
+                elif vt_position =="":
+                    move_backward(5)
+                    time.sleep(0.05)
+                    '''if First_Rotate_command=="Anticlockwise":
+                        rotate_anticlockwise(5)
+                        time.sleep(0.07)
+                        stop(0,0.01)
+                    #elif First_Rotate_command=="Clockwise":
+                        # rotate_clockwise(5)
+                        # time.sleep(0.07)
+                        # stop(0,0.01)
+                    # else:
+                        # rotate_clockwise(5)
+                        # time.sleep(0.07)
+                        #stop(0,0.01)'''
+                   
+                    
+                    
+                
+            
+
 
     except KeyboardInterrupt:
         pass
