@@ -1,10 +1,14 @@
 import RPi.GPIO as io
 import time
-from colorsensors.csA import Color_SensorA
+io.setmode(io.BOARD)
+io.setup(3, io.OUT)
+io.output(3, io.HIGH)
+from csA import Color_SensorA
+from frequencyscaling import frequency_scaling_20percent
 #from colorsensors.csB import Color_SensorB
 #from colorsensors.csC import Color_SensorC
 #from colorsensors.csD import Color_SensorD
-from colorsensors.colorfilter import red, blue, green
+from colorfilter import red, blue, green
 
 colorsensorA = Color_SensorA()
 #colorsensorB = Color_SensorB()
@@ -13,7 +17,7 @@ colorsensorA = Color_SensorA()
 
 cycle = 10
 
-'''def detect_color(sensor, sensor_name):
+def detect_color(sensor, sensor_name):
     """Detect the color using the specified sensor with polling."""
     try:
         # Activate red filter and measure frequency
@@ -36,16 +40,16 @@ cycle = 10
         print(f"{sensor_name} - R:{red_value:.2f} G:{green_value:.2f} B:{blue_value:.2f}")
 
         # Determine the color based on the measured values
-        if red_value >= 300 and green_value >= 300 and blue_value >= 300:
+        if red_value >= 1100 and green_value >= 1100 and blue_value >= 1100:
             print(f"{sensor_name} - white")
             return "white"
         elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
             print(f"{sensor_name} - black")
             return "black"
-        elif red_value < blue_value and green_value < blue_value and blue_value >= 300:
+        elif red_value < blue_value and green_value < blue_value and blue_value >= 800:
             print(f"{sensor_name} - blue")
             return "blue"
-        elif red_value >= 300 and green_value < red_value and blue_value < red_value:
+        elif red_value >= 800 and green_value < red_value and blue_value < red_value:
             print(f"{sensor_name} - red")
             return "red"
         else:
@@ -54,9 +58,9 @@ cycle = 10
     except RuntimeError as e:
         print(f"Error detecting color for {sensor_name}: {e}")
         return None
-'''
 
-'''def measure_frequency(pin, color, sensor_name, timeout = 0.03): # Timeout = 0.03s
+
+def measure_frequency(pin, color, sensor_name, timeout = 0.1): # Timeout = 0.01s
     """Measure the frequency of falling edges on the specified GPIO pin."""
     impulse_count = 0
     start_time = time.time()
@@ -72,8 +76,8 @@ cycle = 10
     if impulse_count == 0:
         print(f"{sensor_name} - No impulses detected for {color} filter.")
     return impulse_count / timeout  # Frequency in Hz
-'''
 
+'''
 import threading
 
 def measure_frequency(pin, color, sensor_name, timeout=0.03):
@@ -159,12 +163,12 @@ def detect_color_parallel(sensor, sensor_name):
             return "wood"
     except RuntimeError as e:
         print(f"Error detecting color for {sensor_name}: {e}")
-        return None
+        return None'''
 
 def color_detecting():
     while True:
         # Detect color for Sensor A
-        color_a = detect_color_parallel(colorsensorA, "Color Sensor A")
+        color_a = detect_color(colorsensorA, "Color Sensor A")
         print(f"Detected by Color Sensor A: {color_a}")
 
         '''# Detect color for Sensor B
@@ -189,6 +193,9 @@ def color_detecting():
         return False
 
 if __name__ == "__main__":
-    color_detecting()
+    frequency_scaling_20percent()
+    while True:
+        color_detecting()
+    io.cleanup([3, 29, 31, 33 ,35, 37 ,32])
 
 

@@ -64,7 +64,7 @@ def middle_calibration(video_capture, tolerance=20):
 
 if __name__ == "__main__":
     # Initialize the camera once
-    video_capture = cv2.VideoCapture(1, cv2.CAP_V4L2)
+    video_capture = cv2.VideoCapture(0, cv2.CAP_V4L2)
     video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Set lower resolution
     video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
