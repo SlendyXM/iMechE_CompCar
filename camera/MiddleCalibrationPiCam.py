@@ -18,11 +18,11 @@ def middle_calibration(frame, tolerance=20):
     frame_center_x = width // 2
 
     # Define HSV ranges for yellow-to-brown (wood colors)
-    lower_yellow_brown = np.array([20, 100, 100])  # Adjust as needed
-    upper_yellow_brown = np.array([30, 255, 255])  # Adjust as needed
+    lower_yellow_brown = np.array([15, 20, 100])  # Adjust as needed
+    upper_yellow_brown = np.array([35, 255, 255])  # Adjust as needed
 
     # Define HSV range for blue
-    lower_blue = np.array([100, 150, 50])
+    lower_blue = np.array([100, 50, 30])
     upper_blue = np.array([140, 255, 255])
 
     # Convert frame to HSV
