@@ -30,7 +30,6 @@ from motors.changedirection.backwardlateralleft import backward_lateral_clockwis
 from motors.changedirection.backwardlateralright import backward_lateral_anticlockwise
 
 # Importing Color Sensor
-from colorsensors.frequencyscaling import frequency_scaling_20percent
 from colorsensors.powersave import enterpowersave, exitpowersave
 from colorsensors.color_detecting import color_detecting
 
@@ -254,7 +253,6 @@ def main():
             buzzer.sound(False)
             reach_original_target = False
             exitpowersave()
-            frequency_scaling_20percent()
             print(initial_distance)
 
             # Move backward at 30% speed until reach back to the original position

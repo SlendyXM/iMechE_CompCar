@@ -3,12 +3,12 @@ import time
 io.setmode(io.BOARD)
 io.setup(3, io.OUT)
 io.output(3, io.HIGH)
-from colorsensors.csA import Color_SensorA
-from colorsensors.frequencyscaling import frequency_scaling_20percent
+from csA import Color_SensorA
+from frequencyscaling import frequency_scaling_20percent
 #from colorsensors.csB import Color_SensorB
 #from colorsensors.csC import Color_SensorC
 #from colorsensors.csD import Color_SensorD
-from colorsensors.colorfilter import red, blue, green
+from colorfilter import red, blue, green
 
 colorsensorA = Color_SensorA()
 #colorsensorB = Color_SensorB()
@@ -170,6 +170,8 @@ def detect_color_parallel(sensor, sensor_name):
 
 def color_detecting():
     while True:
+        frequency_scaling_20percent()
+        
         # Detect color for Sensor A
         color_a = detect_color(colorsensorA, "Color Sensor A")
         print(f"Detected by Color Sensor A: {color_a}")

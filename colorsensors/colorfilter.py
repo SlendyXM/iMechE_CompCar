@@ -1,5 +1,5 @@
 import RPi.GPIO as io
-from colorsensors.csA import Color_SensorA
+from csA import Color_SensorA
 #from colorsensors.csB import Color_SensorB
 #from colorsensors.csC import Color_SensorC
 
