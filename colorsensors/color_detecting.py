@@ -1,8 +1,8 @@
 import RPi.GPIO as io
 import time
-'''io.setmode(io.BOARD)
+io.setmode(io.BOARD)
 io.setup(3, io.OUT)
-io.output(3, io.HIGH)'''
+io.output(3, io.HIGH)
 from colorsensors.csA import Color_SensorA
 from colorsensors.frequencyscaling import frequency_scaling_20percent
 #from colorsensors.csB import Color_SensorB
@@ -46,7 +46,7 @@ def detect_color(sensor, sensor_name):
         elif red_value <= 35 and green_value <= 35 and blue_value <= 35:
             print(f"{sensor_name} - black")
             return "black"
-        elif red_value >= 60 and green_value >= 60 and blue_value >= 60:
+        elif red_value >= 40 and green_value >= 40 and blue_value >= 40:
             print(f"{sensor_name} - wood")
             return "wood"
         elif red_value < blue_value and green_value < blue_value and blue_value >= 60:
