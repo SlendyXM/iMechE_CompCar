@@ -18,21 +18,25 @@ def middle_calibration(frame, tolerance=20):
     frame_center_x = width // 2
 
     # Define HSV ranges for yellow-to-brown (wood colors)
-    lower_yellow_brown = np.array([15, 20, 100])  # Adjust as needed
-    upper_yellow_brown = np.array([35, 255, 255])  # Adjust as needed
+    lower_yellow_brown = np.array([10, 30, 80])  # Expanded range for wood
+    upper_yellow_brown = np.array([40, 255, 255])  # Expanded range for wood
 
     # Define HSV range for blue
-    lower_blue = np.array([100, 50, 30])
-    upper_blue = np.array([140, 255, 255])
+    lower_blue = np.array([90, 50, 50])  # Adjusted for lighter and darker blue
+    upper_blue = np.array([140, 255, 255])  # Adjusted for lighter and darker blue
 
     # Convert frame to HSV
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # Create a mask for yellow-to-brown (wood colors)
     wood_mask = cv2.inRange(hsv_frame, lower_yellow_brown, upper_yellow_brown)
+    wood_mask = cv2.morphologyEx(wood_mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+    wood_mask = cv2.morphologyEx(wood_mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
 
     # Create a mask for blue
     blue_mask = cv2.inRange(hsv_frame, lower_blue, upper_blue)
+    blue_mask = cv2.morphologyEx(blue_mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+    blue_mask = cv2.morphologyEx(blue_mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
 
     # Combine the wood mask and blue mask to isolate blue within the wood region
     combined_mask = cv2.bitwise_and(wood_mask, blue_mask)
@@ -86,8 +90,14 @@ def middle_calibration(frame, tolerance=20):
                     cv2.putText(frame, f"Distance: {distance_to_blue:.2f} cm", (10, 60),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
+    # Debugging: Display masks
+    cv2.imshow("Wood Mask", wood_mask)
+    cv2.imshow("Blue Mask", blue_mask)
+    cv2.imshow("Combined Mask", combined_mask)
+
     # Return position, distance, frame, and mask for debugging
     return blue_position, distance_to_blue, frame, wood_mask
+
 
 
 
