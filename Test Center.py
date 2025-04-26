@@ -353,7 +353,7 @@ def main():
 
             Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
 
-            while average_distance< (initial_distance-500):
+            while average_distance< (initial_distance-150):
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                 move_backward(50)
                 print(average_distance)
@@ -363,7 +363,7 @@ def main():
             
             
                        
-            Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+            '''Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
 
             while average_distance<1500:
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
@@ -371,7 +371,7 @@ def main():
                 print(average_distance)
                 print(f"initial {initial_distance}")
             
-            stop(0,1)
+            stop(0,1)'''
             
             
             
@@ -401,7 +401,7 @@ def main():
                     stop(0,0.01)
                     i=0
             
-            i=0
+            '''i=0
             while True:
                 
                 frame = picam2.capture_array()
@@ -433,7 +433,7 @@ def main():
                     i+=1
                     print("Yellow object centered. Proceeding...")
                     if i >10:
-                        break
+                        break'''
             
             while True:
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
@@ -475,7 +475,7 @@ def main():
                     cv2.imshow("Mask", mask)
 
 	            # Move backward at 30% speed until reach back to the original position
-                move_backward(10)
+                move_backward(5)
                 # print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 # if vt_position == "Left":
                     # print("Adjusting to the left...")
