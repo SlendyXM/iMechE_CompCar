@@ -7,6 +7,88 @@ def middle_calibration(frame, tolerance=20):
     KNOWN_DISTANCE = 50.0  # Distance to object in cm during calibration
     KNOWN_WIDTH = 4.9  # Width of object in cm during calibration
     FOCAL_LENGTH = 1473.67  # Replace with your calculated focal length
+
+    # Preprocess the frame
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frame = cv2.flip(frame, -1)
+    frame = cv2.GaussianBlur(frame, (5, 5), 0)
+
+    # Get frame dimensions
+    height, width, _ = frame.shape
+    frame_center_x = width // 2
+
+    # Define HSV ranges for yellow-to-brown (wood colors)
+    lower_yellow_brown = np.array([20, 100, 100])  # Adjust as needed
+    upper_yellow_brown = np.array([30, 255, 255])  # Adjust as needed
+
+    # Define HSV range for blue
+    lower_blue = np.array([100, 150, 50])
+    upper_blue = np.array([140, 255, 255])
+
+    # Convert frame to HSV
+    hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    # Create a mask for yellow-to-brown (wood colors)
+    wood_mask = cv2.inRange(hsv_frame, lower_yellow_brown, upper_yellow_brown)
+
+    # Find contours in the yellow-to-brown mask
+    wood_contours, _ = cv2.findContours(wood_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    blue_position = ""
+    distance_to_blue = 100000000
+
+    if wood_contours:
+        # Find the largest yellow-to-brown contour
+        largest_wood_contour = max(wood_contours, key=cv2.contourArea)
+        wood_area = cv2.contourArea(largest_wood_contour)
+
+        if wood_area > 50:  # Filter small contours
+            # Create a bounding box around the yellow-to-brown region
+            x, y, w, h = cv2.boundingRect(largest_wood_contour)
+            roi = hsv_frame[y:y + h, x:x + w]
+
+            # Create a mask for blue within the yellow-to-brown region
+            blue_mask = cv2.inRange(roi, lower_blue, upper_blue)
+            blue_contours, _ = cv2.findContours(blue_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            if blue_contours:
+                # Find the largest blue contour within the yellow-to-brown region
+                largest_blue_contour = max(blue_contours, key=cv2.contourArea)
+                blue_area = cv2.contourArea(largest_blue_contour)
+
+                if blue_area > 50:  # Filter small contours
+                    bx, by, bw, bh = cv2.boundingRect(largest_blue_contour)
+                    label_center_x = x + bx + bw // 2
+                    absolute_label_center_x = label_center_x
+
+                    # Distance Calculation
+                    distance_to_blue = (KNOWN_WIDTH * FOCAL_LENGTH) / bw
+
+                    # Determine the position of the blue marker
+                    if abs(absolute_label_center_x - frame_center_x) <= tolerance:
+                        blue_position = "Centered"
+                    elif absolute_label_center_x < frame_center_x - tolerance:
+                        blue_position = "Left"
+                    elif absolute_label_center_x > frame_center_x + tolerance:
+                        blue_position = "Right"
+
+                    # Draw bounding boxes and labels
+                    cv2.rectangle(frame, (x + bx, y + by), (x + bx + bw, y + by + bh), (255, 0, 0), 2)
+                    cv2.putText(frame, f"Blue is: {blue_position}", (10, 30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+                    cv2.putText(frame, f"Distance: {distance_to_blue:.2f} cm", (10, 60),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+
+    # Return position, distance, frame, and mask for debugging
+    return blue_position, distance_to_blue, frame, wood_mask
+
+
+
+'''def middle_calibration(frame, tolerance=20):
+    # Calibration constants for distance calculation
+    KNOWN_DISTANCE = 50.0  # Distance to object in cm during calibration
+    KNOWN_WIDTH = 4.9  # Width of object in cm during calibration
+    FOCAL_LENGTH = 1473.67  # Replace with your calculated focal length
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame = cv2.flip(frame, -1)
     # ---------------------- Step 2: Blue Object Detection ----------------------
@@ -57,7 +139,7 @@ def middle_calibration(frame, tolerance=20):
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
     # Return position, distance, frame, and mask for debugging
-    return blue_position, distance_to_blue, frame, mask
+    return blue_position, distance_to_blue, frame, mask'''
 
 
 if __name__ == "__main__":
