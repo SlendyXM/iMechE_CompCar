@@ -177,6 +177,7 @@ def main():
                     print("Adjusting to the left...")
                     move_right(3)
                     time.sleep(0.005)
+                    stop(0, 0.01)
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                     if Rotate_command == "stop":
                         
@@ -189,6 +190,7 @@ def main():
                     print("Adjusting to the right...")
                     move_left(3)
                     time.sleep(0.005)
+                    stop(0, 0.01)
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
                     if Rotate_command == "stop":
                         
@@ -216,7 +218,7 @@ def main():
                         
                 elif vt_position =="":
                     move_backward(5)
-                    time.sleep(1)
+                    time.sleep(0.05)
                     '''if First_Rotate_command=="Anticlockwise":
                         rotate_anticlockwise(5)
                         time.sleep(0.07)
