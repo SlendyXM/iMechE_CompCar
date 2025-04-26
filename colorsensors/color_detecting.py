@@ -188,5 +188,7 @@ def color_detecting():
         print("Condition not met. Returning False.")
         return False
 
+if __name__ == "__main__":
+    color_detecting()
 
 
