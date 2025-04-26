@@ -62,7 +62,7 @@ def read_sensor_data(ser, sensor_state, sensor_id):
 def compare_distances(distance1, distance2, offset):
     """Compare distances from two sensors and return rotation command."""
     if distance1 is None or distance2 is None:
-        return "No rotation: Missing distance data",999
+        return "No rotation: Missing distance data", 9999
 
     offset = distance1 - distance2+43
     ratio=(distance1 - distance2)/distance1
@@ -102,6 +102,18 @@ def compare_distances(distance1, distance2, offset):
             print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
             #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
             return "Parallel",distance1
+    else:
+        if offset>60:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            return "Anticlockwise",distance1        
+        elif offset<-50:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Clockwise",distance1
+        else:
+            print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{offset} --ratio{ratio}')
+            #print(f'Distance 1:{distance1} -- Distance 2: {distance2} -- Offset{difference}')
+            return "Parallel",distance1
 
 def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-43):
     """Process data from both sensors and return the rotation command."""
@@ -113,7 +125,8 @@ def process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset=-4
 
     # Check for stop condition
     if distance1 is not None and distance2 is not None:
-        if distance1 <= 55 or distance2 <= 95:
+        if distance1 <= 57 or distance2 <= 97:
+            print(distance1, distance2)
             return "stop",distance1
 
     # Compare distances and return rotation command
@@ -145,7 +158,7 @@ if __name__ == "__main__":
     try:
         while True:
             # Process laser data and get the rotation command
-            command = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
+            command,distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state, offset)
             print(f"Action: {command}")
 
             # Exit loop if stop condition is met

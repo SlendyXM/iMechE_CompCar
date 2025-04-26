@@ -130,9 +130,12 @@ def main():
             i=0
             #while True:
                 # Detect wall
-            First_Rotate_command,_ = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+            
             while True:
                 Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                if i ==0:
+                    First_Rotate_command=Rotate_command
+                i+=1
                 print(f"Rotate Action: {Rotate_command} and {average_distance}")
 
                 if not sensor1 or not sensor2:
@@ -152,6 +155,7 @@ def main():
                     rotate_clockwise(5)
                     time.sleep(0.07)
                     stop(0,0.01)
+                
             while True:
                 
                 frame = picam2.capture_array()
@@ -171,25 +175,37 @@ def main():
                 print(f" {i} Yellow Position: {vt_position}, Distance: {cam_distance:.2f} cm")
                 if vt_position == "Left":
                     print("Adjusting to the left...")
-                    move_right(5)
-                    time.sleep(0.02)
+                    move_right(3)
+                    time.sleep(0.005)
+                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                    if Rotate_command == "stop":
+                        
+                        stop(0,0.01)                  
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
+                        buzzer.sound(True)
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
+                        break 
                 elif vt_position == "Right":
                     print("Adjusting to the right...")
-                    move_left(5)
-                    time.sleep(0.02)
+                    move_left(3)
+                    time.sleep(0.005)
+                    Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                    if Rotate_command == "stop":
+                        
+                        stop(0,0.01)                  
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
+                        buzzer.sound(True)
+                        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 0])
+                        break 
                 elif vt_position == "Centered":
+                    stop(0,0.01)
                     print("Yellow object centered. Proceeding...")
                     Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
-                    if average_distance<250:
-                        stop(0,0.4)
-                        frame = picam2.capture_array()
-                        vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
-                        if vt_position == "Centered":
-                            print("Yellow object centered Further Confirmed. Proceeding...")
-                            move_forward(5)
-                            time.sleep(0.2)
-                            Rotate_command,average_distance = process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
+                    print(Rotate_command)
+                    move_forward(5)
+                    time.sleep(0.07)
                     if Rotate_command == "stop":
+                        
                         stop(0,0.01)                  
                         execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [42, 1])
                         buzzer.sound(True)
@@ -197,6 +213,24 @@ def main():
                         break 
                     move_forward(5)
                     time.sleep(0.07)
+                        
+                elif vt_position =="":
+                    move_backward(5)
+                    time.sleep(1)
+                    '''if First_Rotate_command=="Anticlockwise":
+                        rotate_anticlockwise(5)
+                        time.sleep(0.07)
+                        stop(0,0.01)
+                    #elif First_Rotate_command=="Clockwise":
+                        # rotate_clockwise(5)
+                        # time.sleep(0.07)
+                        # stop(0,0.01)
+                    # else:
+                        # rotate_clockwise(5)
+                        # time.sleep(0.07)
+                        #stop(0,0.01)'''
+                   
+                    
                     
                 
             

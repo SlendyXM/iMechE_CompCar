@@ -20,6 +20,8 @@ def middle_calibration(frame, tolerance=20):
 
     roi = frame[roi_top:roi_bottom, roi_left:roi_right]
     hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+    
+    frame = cv2.GaussianBlur(frame, (5,5), 0)
 
     # Define HSV range for blue
     lower_blue = np.array([100, 150, 50])
