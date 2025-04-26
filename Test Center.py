@@ -512,8 +512,8 @@ def main():
             
             
             while not reach_original_target:
-'''
-                # Detect wall
+
+                '''# Detect wall
                 frame = picam2.capture_array()
                 vt_position, cam_distance, processed_frame, mask = middle_calibration(frame)
                 print([i,vt_position, cam_distance])
