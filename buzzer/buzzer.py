@@ -175,7 +175,7 @@ class buzzer():
     def sound(self, power):
         start = time.time()
         while power:
-            if time.time() - start >= 11:
+            if time.time() - start >= 0.1:
                 return
             io.output(self.positive_pin, io.HIGH)
             io.output(self.negative_pin, io.LOW)

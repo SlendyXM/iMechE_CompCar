@@ -3,12 +3,12 @@ import time
 '''io.setmode(io.BOARD)
 io.setup(3, io.OUT)
 io.output(3, io.HIGH)'''
-from csA import Color_SensorA
-from frequencyscaling import frequency_scaling_20percent
+from colorsensors.csA import Color_SensorA
+from colorsensors.frequencyscaling import frequency_scaling_20percent
 #from colorsensors.csB import Color_SensorB
 #from colorsensors.csC import Color_SensorC
 #from colorsensors.csD import Color_SensorD
-from colorfilter import red, blue, green
+from colorsensors.colorfilter import red, blue, green
 
 colorsensorA = Color_SensorA()
 #colorsensorB = Color_SensorB()
@@ -40,19 +40,19 @@ def detect_color(sensor, sensor_name):
         print(f"{sensor_name} - R:{red_value:.2f} G:{green_value:.2f} B:{blue_value:.2f}")
 
         # Determine the color based on the measured values
-        if red_value >= 1100 and green_value >= 1100 and blue_value >= 1100:
+        if red_value >= 100 and green_value >= 100 and blue_value >= 100:
             print(f"{sensor_name} - white")
             return "white"
-        elif red_value <= 300 and green_value <= 300 and blue_value <= 300:
+        elif red_value <= 35 and green_value <= 35 and blue_value <= 35:
             print(f"{sensor_name} - black")
             return "black"
-        elif red_value >= 800 and green_value >= 800 and blue_value >= 800:
+        elif red_value >= 60 and green_value >= 60 and blue_value >= 60:
             print(f"{sensor_name} - wood")
             return "wood"
-        elif red_value < blue_value and green_value < blue_value and blue_value >= 800:
+        elif red_value < blue_value and green_value < blue_value and blue_value >= 60:
             print(f"{sensor_name} - blue")
             return "blue"
-        elif red_value >= 800 and green_value < red_value and blue_value < red_value:
+        elif red_value >= 60 and green_value < red_value and blue_value < red_value:
             print(f"{sensor_name} - red")
             return "red"
         else:
@@ -63,7 +63,7 @@ def detect_color(sensor, sensor_name):
         return None
 
 
-def measure_frequency(pin, color, sensor_name, timeout = 0.1): # Timeout = 0.01s
+def measure_frequency(pin, color, sensor_name, timeout = 0.01): # Timeout = 0.01s
     """Measure the frequency of falling edges on the specified GPIO pin."""
     impulse_count = 0
     start_time = time.time()
@@ -72,7 +72,7 @@ def measure_frequency(pin, color, sensor_name, timeout = 0.1): # Timeout = 0.01s
     while time.time() - start_time < timeout:
         current_state = io.input(pin)
         if previous_state == io.HIGH and current_state == io.LOW:
-            impulse_count += 1
+            impulse_count += 0.1
         previous_state = current_state
         time.sleep(0.0001)  # Small delay to avoid busy-waiting
 
