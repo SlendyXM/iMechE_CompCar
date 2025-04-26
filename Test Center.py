@@ -104,6 +104,8 @@ def main():
     successful=0
     buzzer.sound(False)
     execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=12)
+    start_time = time.time()
+    time.sleep(5)
     try:
         #while True
             Temp,initial_distance=process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
@@ -796,7 +798,7 @@ def main():
         sensor2.close()
         camera.release()
         cv2.destroyAllWindows()
-        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [41, 1])
+        execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [41, 0])
 
 if __name__ == "__main__":
     main()
