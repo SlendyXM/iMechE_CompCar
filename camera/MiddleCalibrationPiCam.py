@@ -31,6 +31,12 @@ def middle_calibration(frame, tolerance=20):
     # Create a mask for yellow-to-brown (wood colors)
     wood_mask = cv2.inRange(hsv_frame, lower_yellow_brown, upper_yellow_brown)
 
+    # Create a mask for blue
+    blue_mask = cv2.inRange(hsv_frame, lower_blue, upper_blue)
+
+    # Combine the wood mask and blue mask to isolate blue within the wood region
+    combined_mask = cv2.bitwise_and(wood_mask, blue_mask)
+
     # Find contours in the yellow-to-brown mask
     wood_contours, _ = cv2.findContours(wood_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -45,11 +51,12 @@ def middle_calibration(frame, tolerance=20):
         if wood_area > 50:  # Filter small contours
             # Create a bounding box around the yellow-to-brown region
             x, y, w, h = cv2.boundingRect(largest_wood_contour)
-            roi = hsv_frame[y:y + h, x:x + w]
 
-            # Create a mask for blue within the yellow-to-brown region
-            blue_mask = cv2.inRange(roi, lower_blue, upper_blue)
-            blue_contours, _ = cv2.findContours(blue_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            # Apply the combined mask to the bounding box
+            roi_combined_mask = combined_mask[y:y + h, x:x + w]
+
+            # Find contours in the combined mask
+            blue_contours, _ = cv2.findContours(roi_combined_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
             if blue_contours:
                 # Find the largest blue contour within the yellow-to-brown region
@@ -81,6 +88,8 @@ def middle_calibration(frame, tolerance=20):
 
     # Return position, distance, frame, and mask for debugging
     return blue_position, distance_to_blue, frame, wood_mask
+
+
 
 
 
