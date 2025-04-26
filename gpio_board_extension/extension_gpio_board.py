@@ -144,9 +144,92 @@ class PiDeviceController:
         
         return self.send_command(command)
     
-    def gpio_status_read(self) -> bool:
-        """Read GPIO status (Command 0x11)"""
-        return self.send_command(bytearray([0x11]))
+    def decode_gpio_status(raw_data: bytes) -> list:
+        """
+        Decodes raw GPIO status bytes into pin states.
+        :param raw_data: Full response including command echo (e.g., b'\x11\r\x00')
+        :return: List of pin states (0/1) for pins 1-16
+        """
+        # Strip command echo (first byte) and terminator (if any)
+        data_bytes = raw_data[1:]  # Result: b'\r\x00'
+
+        if len(data_bytes) < 2:
+            return []
+
+        # Combine bytes (little-endian)
+        status = int.from_bytes(data_bytes[:2], byteorder='little')
+
+        # Extract pin states (pin 1 = LSB)
+        return [(status >> (pin - 1)) & 1 for pin in range(1, 17)]
+        
+    def gpio_status_read(self) -> list:
+        """
+        Read GPIO status (Command 0x11).
+        :return: List of pin states (0 or 1) for pins 1-16.
+        """
+        def decode_gpio_status(raw_data: bytes) -> list:
+                """
+                Decodes raw GPIO status bytes into pin states.
+                :param raw_data: Full response including command echo (e.g., b'\x11\r\x00')
+                :return: List of pin states (0/1) for pins 1-16
+                """
+                # Strip command echo (first byte) and terminator (if any)
+                data_bytes = raw_data[1:]  # Result: b'\r\x00'
+
+                if len(data_bytes) < 2:
+                    return []
+
+                # Combine bytes (little-endian)
+                status = int.from_bytes(data_bytes[:2], byteorder='little')
+
+                # Extract pin states (pin 1 = LSB)
+                return [(status >> (pin - 1)) & 1 for pin in range(1, 17)]
+        
+        try:
+            response=""
+
+            while not response:
+                command = bytearray([0x11])
+                self.send_command(command)
+
+                temp=self.ser.readline()
+                response = str(temp)
+                print(response)
+
+            pin_states = decode_gpio_status(temp)
+            print("GPIO Pin States (1-16):", pin_states)
+            return pin_states
+
+            # Convert the 2-byte response into a 16-bit integer
+            ''' status = int.from_bytes(response, byteorder='big') 
+
+            pin_states = [(status >> (16 - pin_num)) & 1 for pin_num in range(1, 17)]
+
+            return pin_states'''
+
+        except Exception as e:
+            print(f"Error reading GPIO status: {e}")
+            return []
+            
+    def wait_for_pin10_high(self):
+        """
+        Continuously read GPIO status until pin 10 is HIGH (1).
+        """
+        self.gpio_single_pin_set(1, 0) 
+        print("Waiting for pin 10 to go HIGH...")
+        while True:
+            pin_states = self.gpio_status_read()
+            if not pin_states:
+                print("Failed to read pin states or invalid response.")
+                time.sleep(0.05)
+                continue
+            print(f"Pin 10 state: {pin_states[9]}")
+            if pin_states[9] == 1:
+                print("Pin 10 is HIGH!")
+                break
+            time.sleep(0.05)
+        self.gpio_single_pin_set(1, 1) 
+    
     
     def pwm_group_config(self, group_num: int, resolution: int, period: int, 
                         active_level: int, idle_level: int) -> bool:
@@ -334,6 +417,9 @@ def execute_device_command(port: Optional[str] = None,
             # Unlock Programming
             result = controller.unlock_programming()
             
+        elif command_index == 12:
+            result=controller.wait_for_pin10_high()
+            
         else:
             print("Invalid command index (must be 1-11)")
             return False
@@ -494,6 +580,10 @@ def main():
                 execute_device_command(port=port, baudrate=baudrate, 
                                      command_index=command_index)
             
+            elif command_index == 12:
+                # Unlock Programming
+                execute_device_command(port=port, baudrate=baudrate, 
+                                     command_index=command_index)
             else:
                 print("Invalid choice. Please try again.")
             

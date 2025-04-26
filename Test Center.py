@@ -48,6 +48,7 @@ from camera.TargetCalibation_0424 import process_frame
 
 from gpio_board_extension.extension_gpio_board import execute_device_command
 
+
 from lasersensors.dual_laser_sensor_1 import setup_serial, process_laser_data
 
 # Localize all pins
@@ -84,7 +85,7 @@ Extension_GPIO_Port = "/dev/ttyACM2"
 # Main Function
 def main():
     #LED_Green()
-    execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [41, 1])
+    #execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=2, input_array= [41, 1])
     picam2 = Picamera2()
     config = picam2.create_preview_configuration(main={"size": (640, 480)})
     picam2.configure(config)
@@ -102,7 +103,7 @@ def main():
     center_point = (337, 365)  # Default center point
     successful=0
     buzzer.sound(False)
-
+    execute_device_command(port= Extension_GPIO_Port,baudrate= 115200, command_index=12)
     try:
         #while True
             Temp,initial_distance=process_laser_data(sensor1, sensor2, sensor1_state, sensor2_state)
@@ -351,7 +352,7 @@ def main():
             
             
             move_left(10)
-            time.sleep(0.07)
+            time.sleep(0.14)
             stop(0,0.01)
 
 
@@ -572,7 +573,7 @@ def main():
                 if mask is not None:
                     cv2.imshow("Color Mask", mask)
                 
-                if frame == None:
+                if x_cmd == None:
                     break
                 # Print movement commands
                 if x_cmd and y_cmd:
